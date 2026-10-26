@@ -1,3 +1,2 @@
-// Entry point Vercel (arquivos na raiz do repo)
-const app = require('./server');
-module.exports = app;
+// Função serverless única da Vercel: todo o tráfego passa pelo Express (server.js).
+module.exports = require('../server');
