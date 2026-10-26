@@ -218,7 +218,7 @@ app.use((req, res, next) => {
 const SENSITIVE_EXTS = ['.env','.git','.sql','.json','.md','.txt','.bak','.log','.old','.orig','.save'];
 const SENSITIVE_FILES = ['database.json','package.json','package-lock.json','vercel.json','LEIA-ME',
   'server.js','db.js','auth.js','supabaseClient.js','supabaseDb.js','tracking-server.js',
-  'recruitment-server.js','migrate-to-supabase.js','test_security.js','.env','.gitignore'];
+  'recruitment-server.js','migrate-to-supabase.js','reset-access.js','test_security.js','.env','.gitignore'];
 const SENSITIVE_DIRS = ['/data','/assets','/node_modules','/.git'];
 
 function isSensitivePath(p) {
@@ -325,11 +325,21 @@ app.get('/dashboard', (req, res) => {
 // Status da Conexão com o Supabase
 app.get('/api/supabase/status', async (req, res) => {
   const isConfigured = db.isSupabaseConfigured();
+  // Diagnóstico seguro: só mostra SE as variáveis existem (nunca os valores)
+  const envSeen = {
+    SUPABASE_URL: Boolean((process.env.SUPABASE_URL || '').trim()),
+    SUPABASE_SERVICE_ROLE_KEY: Boolean((process.env.SUPABASE_SERVICE_ROLE_KEY || '').trim()),
+    JWT_SECRET: Boolean((process.env.JWT_SECRET || '').trim()),
+    envNamesWithSupabase: Object.keys(process.env).filter(k => /supabase|service|role/i.test(k)),
+    vercelEnv: process.env.VERCEL_ENV || null,
+    commit: (process.env.VERCEL_GIT_COMMIT_SHA || '').slice(0, 7) || null
+  };
   if (!isConfigured) {
     return res.json({
       success: true,
       configured: false,
       connected: false,
+      envSeen,
       message: "Supabase não configurado. Operando com armazenamento local (data/database.json).",
       instructions: "Defina SUPABASE_URL e SUPABASE_SERVICE_ROLE_KEY no arquivo .env para ativar a nuvem."
     });
