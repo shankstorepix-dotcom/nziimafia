@@ -1,0 +1,2684 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>NZI — Dashboard Oficial</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@700;800;900&family=IBM+Plex+Mono:wght@400;500;600;700&family=Rajdhani:wght@500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/nzi-theme.css">
+  <link rel="stylesheet" href="/tracking.css">
+  <style>
+    /* Estilos explícitos para modais com suporte a todas as resoluções e z-index prioritário */
+    .nzi-modal-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      z-index: 999999 !important;
+      background: rgba(0, 0, 0, 0.88) !important;
+      backdrop-filter: blur(8px) !important;
+      -webkit-backdrop-filter: blur(8px) !important;
+      padding: 16px;
+      overflow-y: auto;
+    }
+    .nzi-modal-overlay.active {
+      display: flex !important;
+      align-items: center !important;
+      justify-content: center !important;
+    }
+    .nzi-modal-box {
+      width: 100% !important;
+      max-width: 540px !important;
+      background: #0e0507 !important;
+      border: 1.5px solid var(--line-strong, #3a1518) !important;
+      border-radius: 18px !important;
+      box-shadow: 0 0 50px rgba(255, 42, 58, 0.35), 0 20px 40px rgba(0,0,0,0.95) !important;
+      padding: 24px !important;
+      position: relative !important;
+      margin: auto !important;
+      animation: rise .2s ease both !important;
+    }
+    .modal-header {
+      display: flex; justify-content: space-between; align-items: center;
+      border-bottom: 1px solid var(--line, #2a0e12); padding-bottom: 14px; margin-bottom: 18px;
+    }
+    .modal-header h3 {
+      margin: 0; font: 900 24px/1 var(--display, 'Rajdhani', sans-serif); text-transform: uppercase; color: #fff;
+    }
+    .modal-close-btn {
+      background: transparent; border: 0; color: var(--mute, #888); font-size: 28px;
+      line-height: 1; cursor: pointer; transition: color .2s;
+    }
+    .modal-close-btn:hover { color: var(--accent, #ff2a3a); }
+    .modal-footer {
+      display: flex; justify-content: flex-end; gap: 12px;
+      border-top: 1px solid var(--line, #2a0e12); padding-top: 16px; margin-top: 20px;
+    }
+  </style>
+</head>
+<body>
+
+<!-- SVG Ícones do Sistema -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="i-home" viewBox="0 0 24 24"><path d="M3 11l9-8 9 8"/><path d="M5 10v10h5v-6h4v6h5V10"/></symbol>
+  <symbol id="i-vault" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2"/><circle cx="12" cy="12" r="3.5"/><path d="M12 8.5v-1M12 16.5v-1M8.5 12h-1M16.5 12h-1"/></symbol>
+  <symbol id="i-target" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1"/></symbol>
+  <symbol id="i-mail" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/></symbol>
+  <symbol id="i-users" viewBox="0 0 24 24"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20c.6-3.6 3.2-5.5 6.5-5.5s5.9 1.9 6.5 5.5"/><circle cx="17" cy="9" r="2.5"/><path d="M17.5 14.5c2.4.2 3.7 1.7 4 4.5"/></symbol>
+  <symbol id="i-lock" viewBox="0 0 24 24"><rect x="4" y="10" width="16" height="11" rx="2"/><path d="M8 10V7a4 4 0 018 0v3"/></symbol>
+  <symbol id="i-log" viewBox="0 0 24 24"><path d="M3 12h4l3-8 4 16 3-8h4"/></symbol>
+  <symbol id="i-play" viewBox="0 0 24 24"><rect x="3" y="6" width="18" height="12" rx="3"/><path d="M10 9.5v5l4.5-2.5z"/></symbol>
+  <symbol id="i-money" viewBox="0 0 24 24"><rect x="2.5" y="6" width="19" height="12" rx="2"/><circle cx="12" cy="12" r="2.8"/><path d="M6 9.5v.01M18 14.5v.01"/></symbol>
+  <symbol id="i-chart" viewBox="0 0 24 24"><path d="M4 20V10M10 20V4M16 20v-8M22 20H2"/></symbol>
+  <symbol id="i-pie" viewBox="0 0 24 24"><path d="M12 3v9h9"/><path d="M20.5 15A9 9 0 1112 3"/></symbol>
+  <symbol id="i-shield" viewBox="0 0 24 24"><path d="M12 3l8 3v6c0 4.5-3.3 8-8 9-4.7-1-8-4.5-8-9V6z"/><path d="M8.5 12l2.5 2.5 4.5-5"/></symbol>
+  <symbol id="i-user" viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21c.8-4.2 4-6 8-6s7.2 1.8 8 6"/></symbol>
+  <symbol id="i-arrow" viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></symbol>
+  <symbol id="i-menu" viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h16"/></symbol>
+  <symbol id="i-key" viewBox="0 0 24 24"><circle cx="8" cy="15" r="4"/><path d="M11 12l9-9M16 7l3 3M14 9l2 2"/></symbol>
+  <symbol id="i-card" viewBox="0 0 24 24"><rect x="2.5" y="5" width="19" height="14" rx="2"/><path d="M2.5 10h19M6 15h4"/></symbol>
+  <symbol id="i-panel" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 9v12"/></symbol>
+  <symbol id="i-chat" viewBox="0 0 24 24"><path d="M4 5h16v11H9l-5 4z"/><path d="M8 9.5h8M8 12.5h5"/></symbol>
+  <symbol id="i-link" viewBox="0 0 24 24"><path d="M10 14a4 4 0 005.7 0l3-3a4 4 0 00-5.7-5.7l-1 1"/><path d="M14 10a4 4 0 00-5.7 0l-3 3A4 4 0 0011 18.7l1-1"/></symbol>
+  <symbol id="i-cal" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></symbol>
+  <symbol id="i-image" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2"/><circle cx="9" cy="10" r="1.8"/><path d="M21 16l-5-5-8 8"/></symbol>
+  <symbol id="i-check" viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></symbol>
+  <symbol id="i-trash" viewBox="0 0 24 24"><path d="M3 6h18M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2M10 11v6M14 11v6"/></symbol>
+  <symbol id="i-edit" viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></symbol>
+  <symbol id="i-eye" viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></symbol>
+  <symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol>
+  <symbol id="i-terminal" viewBox="0 0 24 24"><path d="M4 17l6-6-6-6M12 19h8"/></symbol>
+  <symbol id="i-discord" viewBox="0 0 24 24"><path d="M20.317 4.37a19.791 19.791 0 00-4.885-1.515.074.074 0 00-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 00-5.487 0 12.64 12.64 0 00-.617-1.25.077.077 0 00-.079-.037A19.736 19.736 0 003.677 4.37a.07.07 0 00-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 00.031.057 19.9 19.9 0 005.993 3.03.078.078 0 00.084-.028c.462-.63.874-1.295 1.226-1.994.021-.041.001-.09-.041-.106a13.107 13.107 0 01-1.872-.892.077.077 0 01-.008-.128 10.2 10.2 0 00.372-.292.074.074 0 01.077-.01c3.929 1.793 8.18 1.793 12.061 0a.074.074 0 01.078.01c.12.098.246.198.373.292a.077.077 0 01-.006.127 12.299 12.299 0 01-1.873.894.077.077 0 00-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 00.084.028 19.839 19.839 0 006.002-3.03.077.077 0 00.032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 00-.031-.028zM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.956-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.956 2.418-2.157 2.418zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.955-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.946 2.418-2.157 2.418z"/></symbol>
+  <symbol id="i-telegram" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.64 6.8c-.15 1.58-.8 5.42-1.13 7.19-.14.75-.42 1-.68 1.03-.58.05-1.02-.38-1.58-.75-.88-.58-1.38-.94-2.23-1.5-.99-.65-.35-1.01.22-1.59.15-.15 2.71-2.48 2.76-2.69a.2.2 0 00-.05-.18c-.06-.05-.14-.03-.21-.02-.09.02-1.49.95-4.22 2.79-.4.27-.76.41-1.08.4-.36-.01-1.04-.2-1.55-.37-.63-.2-1.12-.31-1.08-.66.02-.18.27-.36.74-.55 2.92-1.27 4.86-2.11 5.83-2.52 2.77-1.16 3.35-1.36 3.73-1.36.08 0 .27.02.39.12.1.08.13.19.14.27-.01.06.01.24 0 .38z"/></symbol>
+  <symbol id="i-tiktok" viewBox="0 0 24 24"><path d="M19.59 6.69a4.83 4.83 0 01-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 01-5.2 1.74 2.89 2.89 0 012.31-4.64c.29 0 .58.04.86.12V9.4a6.33 6.33 0 00-6.62 6.27A6.34 6.34 0 0010 22a6.34 6.34 0 006.33-6.33V9.22a8.16 8.16 0 004.91 1.64V7.41a4.85 4.85 0 01-1.65-.72z"/></symbol>
+  <symbol id="i-globe" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c3 3 3 15 0 18M12 3c-3 3-3 15 0 18"/></symbol>
+</svg>
+
+<button class="menu-btn" id="menuBtn" aria-label="Abrir menu"><svg><use href="#i-menu"/></svg></button>
+<div class="scrim" id="scrim"></div>
+<div id="globalAlert" class="alert-banner" role="status" aria-live="polite"></div>
+
+<div class="app">
+  <!-- ================= SIDEBAR ================= -->
+  <aside class="sidebar">
+    <a class="logo" href="/">NZI<small>MAFIA</small></a>
+    <nav class="nav" aria-label="Navegação principal">
+      <button class="nav-item active" data-tab="tab-overview"><svg><use href="#i-home"/></svg>Dashboard</button>
+      <button class="nav-item" data-tab="tab-painel"><svg><use href="#i-panel"/></svg>Painel</button>
+      <button class="nav-item" data-tab="tab-discord"><svg><use href="#i-chat"/></svg>Conta Discord</button>
+      <button class="nav-item" data-tab="tab-links"><svg><use href="#i-link"/></svg>Central de Links</button>
+      <button class="nav-item" data-tab="tab-eventos"><svg><use href="#i-cal"/></svg>Eventos</button>
+      <div class="nav-sep"></div>
+      <button class="nav-item" data-tab="tab-operations" id="navOperationsBtn" style="color:var(--accent-2)"><svg><use href="#i-target"/></svg>Operações <span class="badge" id="opNavBadge" style="margin-left:auto;font-size:10px">Admin</span></button>
+      <button class="nav-item" data-tab="tab-members"><svg><use href="#i-users"/></svg>Hierarquia</button>
+      <button class="nav-item" data-tab="tab-security"><svg><use href="#i-lock"/></svg>Segurança</button>
+      <button class="nav-item" data-tab="tab-audit"><svg><use href="#i-log"/></svg>Auditoria</button>
+      <div class="nav-sep"></div>
+      <a class="nav-item" href="/"><svg><use href="#i-home"/></svg>Site da NZI</a>
+      <a class="nav-item" href="/#entretenimento"><svg><use href="#i-play"/></svg>Entretenimento</a>
+    </nav>
+    <div class="side-status">
+      <b><span class="dot"></span> NZI Online</b>
+      <span id="sideSubStatus">Todos os sistemas operacionais.</span>
+    </div>
+    <p class="side-copy">NZI © 2026 · Juntos somos mais fortes.</p>
+  </aside>
+
+  <!-- ================= MAIN ================= -->
+  <main class="main">
+    <!-- HERO HEADER COM GIF ANIMADO -->
+    <header class="hero" id="heroHeader" style="--hero-img:url('/assets/dashboard-hero.gif'); background-size: auto, 125% auto, auto; background-position: 0 0, left 38%, 0 0;">
+      <div>
+        <div class="hero-kicker" id="heroKicker">Painel Oficial NZI · Dados Reais &amp; Tempo Real</div>
+        <h1>Bem-vindo(a) à <em>NZI</em></h1>
+        <div class="hero-tag">Juntos somos mais fortes · Dinheiro primeiro</div>
+      </div>
+      <div class="hero-right">
+        <div class="chip">
+          <span class="dot red"></span>
+          <div><strong>NZI Online</strong><span id="uptimeLabel">Sessão ativa</span></div>
+        </div>
+        <div class="chip" id="userProfileChip">
+          <div class="avatar" id="avatarBox" style="overflow:hidden;padding:0;position:relative;display:flex;align-items:center;justify-content:center;width:42px;height:42px">
+            <img id="profileAvatarImg" src="" alt="Avatar" style="display:none;width:100%;height:100%;object-fit:cover">
+            <span id="avatarInitials">NZI</span>
+          </div>
+          <div>
+            <strong id="profileName">Visitante</strong>
+            <span id="profileRole">Acesso Público</span><br>
+            <span id="adminBadgeText" style="color:var(--mute);font-size:12px">Login público</span>
+          </div>
+          <button class="btn-ghost" id="authActionBtn">Login</button>
+        </div>
+      </div>
+    </header>
+
+    <!-- ================= ACESSOS POR ESTADO (integrado à página inicial · somente administradores) ================= -->
+    <section class="trk admin-only" id="trkHome" aria-label="Acessos ao site por estado">
+      <div id="trkRoot"></div>
+    </section>
+
+    <!-- KPI CARDS (DADOS REAIS CALCULADOS NO BANCO) -->
+    <section class="stats" aria-label="Indicadores">
+      <div class="card stat hoverable" data-goto="tab-painel" style="cursor:pointer">
+        <div class="ring"><svg><use href="#i-panel"/></svg></div>
+        <div>
+          <div class="label">Publicações Painel</div>
+          <div class="value" id="kpiPainel">0</div>
+          <div class="sub">Módulos em exibição</div>
+        </div>
+      </div>
+      <div class="card stat hoverable" data-goto="tab-eventos" style="cursor:pointer">
+        <div class="ring"><svg><use href="#i-cal"/></svg></div>
+        <div>
+          <div class="label">Eventos Confirmados</div>
+          <div class="value accent" id="kpiEventosConfirmed">0</div>
+          <div class="sub" id="kpiEventosActive">0 em andamento</div>
+        </div>
+      </div>
+      <div class="card stat hoverable" data-goto="tab-links" style="cursor:pointer">
+        <div class="ring"><svg><use href="#i-link"/></svg></div>
+        <div>
+          <div class="label">Central de Links</div>
+          <div class="value" id="kpiLinks">4/4</div>
+          <div class="sub">Canais homologados</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= 4. DASHBOARD (INÍCIO) ================= -->
+    <section id="tab-overview" class="tab-pane active">
+      <div class="grid-2 single">
+        <div class="card">
+          <div class="card-title">
+            <span class="l"><svg><use href="#i-target"/></svg>Resumo por Categoria</span>
+            <button class="btn-out btn-sm" data-goto="tab-operations">+ Operações</button>
+          </div>
+          <dl class="kv">
+            <dt>Categoria Painel</dt><dd id="sumCatPainel">0 publicações</dd>
+            <dt>Categoria Conta Discord</dt><dd id="sumCatDiscord">0 publicações</dd>
+            <dt>Categoria Central de Links</dt><dd id="sumCatLinks">0 publicações</dd>
+            <dt>Categoria Eventos</dt><dd id="sumCatEventos">0 publicações</dd>
+            <dt>Eventos Ativos / Confirmados</dt><dd id="sumEventosStatus" style="color:var(--green)">0 ativos</dd>
+          </dl>
+          <div style="margin-top:16px;display:flex;gap:8px">
+            <button class="btn-out" style="flex:1;justify-content:center" data-goto="tab-operations">Acessar Operações →</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Atalhos rápidos do dashboard -->
+      <h3 style="font:800 24px var(--display);text-transform:uppercase;margin:24px 0 12px;color:#fff">Atalhos das Áreas Oficiais</h3>
+      <div class="grid-4">
+        <div class="card shortcut hoverable" data-goto="tab-painel">
+          <div><div class="ring"><svg><use href="#i-panel"/></svg></div><h3>Painel</h3><p>Módulos, ferramentas e comunicados do painel.</p></div>
+          <div><span class="btn-out">Acessar Painel →</span></div>
+        </div>
+        <div class="card shortcut hoverable" data-goto="tab-discord">
+          <div><div class="ring"><svg><use href="#i-chat"/></svg></div><h3>Conta Discord</h3><p>Bots e acessos oficiais com cofre de segurança.</p></div>
+          <div><span class="btn-out">Acessar Discord →</span></div>
+        </div>
+        <div class="card shortcut hoverable" data-goto="tab-links">
+          <div><div class="ring"><svg><use href="#i-link"/></svg></div><h3>Central de Links</h3><p>Root, Discord, Telegram e TikTok oficiais.</p></div>
+          <div><span class="btn-out">Acessar Links →</span></div>
+        </div>
+      </div>
+
+      <div class="card banner hoverable" style="margin-top:14px" data-goto="tab-eventos">
+        <div style="display:flex;align-items:center;gap:16px">
+          <div class="ring" style="width:54px;height:54px"><svg><use href="#i-cal"/></svg></div>
+          <div>
+            <h3>Próximos Eventos com Temporizador Regressivo</h3>
+            <p>Acompanhe contagens regressivas dinâmicas e horários oficiais da NZI.</p>
+          </div>
+        </div>
+        <span class="btn-out">Ver Eventos →</span>
+      </div>
+    </section>
+
+    <!-- ================= 6. PÁGINA PAINEL ================= -->
+    <section id="tab-painel" class="tab-pane">
+      <div class="page-head">
+        <div>
+          <h2>Página <span>Painel</span></h2>
+          <p>Credenciais de painel cadastradas pelo Owner · Senhas protegidas</p>
+        </div>
+        <div style="display:flex;gap:10px">
+          <button class="btn-action btn-sm admin-only" id="newPostPainelBtn">+ Cadastrar Painel</button>
+        </div>
+      </div>
+      <div class="card" style="margin-bottom:18px;background:rgba(255,42,58,.04);border-color:var(--line-strong)">
+        <div style="display:flex;align-items:center;gap:12px">
+          <svg width="24" height="24" style="stroke:var(--green);fill:none;stroke-width:2"><use href="#i-shield"/></svg>
+          <p style="margin:0;font-size:14px;color:#d8c4c5">
+            <b>Segurança Ativa:</b> Senhas criptografadas com AES-256-GCM. User e tipo de login visíveis a admins. Consulta de senha exige PIN e gera log de auditoria.
+          </p>
+        </div>
+      </div>
+      <div class="posts-grid" id="painelPostsContainer">
+        <p style="color:var(--mute);text-align:center;grid-column:1/-1">Carregando registros de Painel…</p>
+      </div>
+    </section>
+
+    <!-- ================= 7. PÁGINA CONTA DISCORD & REWARDS ================= -->
+    <section id="tab-discord" class="tab-pane">
+      <div class="page-head">
+        <div>
+          <h2>Conta <span>Discord</span> &amp; Rewards</h2>
+          <p>Contas oficiais e sistema de recompensas com cofre criptografado</p>
+        </div>
+        <div style="display:flex;gap:10px">
+          <button class="btn-action btn-sm admin-only" id="newDiscordAccountBtn">+ Cadastrar Conta / Reward</button>
+        </div>
+      </div>
+      <div class="card" style="margin-bottom:18px;background:rgba(255,42,58,.04);border-color:var(--line-strong)">
+        <div style="display:flex;align-items:center;gap:12px">
+          <svg width="24" height="24" style="stroke:var(--accent-2);fill:none;stroke-width:2"><use href="#i-shield"/></svg>
+          <p style="margin:0;font-size:14px;color:#d8c4c5">
+            <b>🎁 Sistema de Reward:</b> Contas adicionadas como recompensa podem ser resgatadas por integrantes. Ao reivindicar, as credenciais são liberadas com exclusividade para você e a conta <b>some do painel</b> para que nenhum outro membro possa vê-la ou resgatá-la.
+          </p>
+        </div>
+      </div>
+      <div class="posts-grid" id="discordAccountsContainer">
+        <p style="color:var(--mute);text-align:center;grid-column:1/-1">Carregando contas e rewards…</p>
+      </div>
+    </section>
+
+    <!-- ================= 8. PÁGINA CENTRAL DE LINKS ================= -->
+    <section id="tab-links" class="tab-pane">
+      <div class="page-head">
+        <div>
+          <h2>Central de <span>Links</span></h2>
+          <p>4 aplicativos oficiais: Root, Discord, Telegram e TikTok com URLs gerenciáveis</p>
+        </div>
+        <div>
+          <button class="btn-out btn-sm admin-only" id="editLinksBtn">Configurar Links em Operações ↗</button>
+        </div>
+      </div>
+      <div class="central-links-grid" id="centralLinksContainer">
+        <!-- 4 Cards de Aplicativos gerados dinamicamente -->
+      </div>
+    </section>
+
+    <!-- ================= 9. PÁGINA EVENTOS ================= -->
+    <section id="tab-eventos" class="tab-pane">
+      <div class="page-head">
+        <div>
+          <h2>Eventos <span>NZI</span></h2>
+          <p>Cards modernos com temporizadores regressivos reais e indicadores de status</p>
+        </div>
+        <div style="display:flex;gap:10px">
+          <button class="btn-action btn-sm admin-only" id="newEventBtn">+ Agendar Novo Evento</button>
+        </div>
+      </div>
+      <div class="event-tools">
+        <button class="filter-btn active" data-event-filter="Todos">Todos</button>
+        <button class="filter-btn" data-event-filter="Confirmado">Confirmados</button>
+        <button class="filter-btn" data-event-filter="Em andamento">Em andamento</button>
+        <button class="filter-btn" data-event-filter="Agendado">Agendados</button>
+        <button class="filter-btn" data-event-filter="Finalizado">Finalizados</button>
+        <input class="search" id="publicEventSearch" type="search" placeholder="Buscar evento por título ou descrição…">
+      </div>
+      <div class="event-grid" id="publicEventsGrid">
+        <p style="color:var(--mute);text-align:center;grid-column:1/-1">Carregando eventos…</p>
+      </div>
+      <p id="publicEventEmpty" class="muted-note" style="display:none;text-align:center;margin-top:20px">[ Nenhum evento encontrado para os filtros selecionados ]</p>
+    </section>
+
+    <!-- ================= 10. PAINEL DE OPERAÇÕES (ADMINISTRAÇÃO) ================= -->
+    <section id="tab-operations" class="tab-pane">
+      <!-- BLOQUEIO DE ACESSO PARA NÃO-ADMINS -->
+      <div id="opLockScreen" class="admin-lock-screen" style="display:none">
+        <div class="lock-icon-big"><svg><use href="#i-lock"/></svg></div>
+        <h2 style="font:900 32px var(--display);text-transform:uppercase;margin:0 0 8px;color:#fff">Área de <span>Operações</span> Restrita</h2>
+        <p style="color:var(--mute);font-size:15px;margin:0 0 20px">Apenas administradores autorizados (Dono e Fundador) possuem permissão para criar, editar e excluir conteúdos.</p>
+        <form id="opLoginForm" style="display:flex;flex-direction:column;gap:14px;text-align:left">
+          <div class="field">
+            <label for="opUsername">Codinome do Administrador</label>
+            <input type="text" id="opUsername" placeholder="Ex: usuario" required>
+          </div>
+          <div class="field">
+            <label for="opPassword">Senha de Administrador</label>
+            <input type="password" id="opPassword" placeholder="••••••••••••" required>
+          </div>
+          <div class="field">
+            <label for="opPin">Código 2FA / OTP (6 dígitos numéricos)</label>
+            <input type="password" id="opPin" maxlength="6" inputmode="numeric" pattern="\d{6}" placeholder="••••••" style="letter-spacing:.3em;text-align:center;font-size:20px" required>
+          </div>
+          <button type="submit" class="btn-action" style="width:100%;margin-top:6px">Desbloquear Operações</button>
+        </form>
+      </div>
+
+      <!-- PAINEL OPERACIONAL DESBLOQUEADO (ADMIN) -->
+      <div id="opAdminContent" style="display:none">
+        <div class="page-head">
+          <div>
+            <h2>Painel de <span>Operações</span></h2>
+            <p>Gerenciamento central de publicações, categorias, links, eventos e credenciais</p>
+          </div>
+          <div style="display:flex;align-items:center;gap:10px">
+            <span class="badge badge-in">Modo Administrador</span>
+          </div>
+        </div>
+
+        <!-- Subabas de Operações -->
+        <div class="op-tabs-bar">
+          <button class="op-tab-btn active" data-oppane="oppane-posts"><svg width="18" height="18" style="stroke:currentColor;fill:none;stroke-width:2"><use href="#i-card"/></svg> Gerenciar Publicações</button>
+          <button class="op-tab-btn" data-oppane="oppane-painel"><svg width="18" height="18" style="stroke:currentColor;fill:none;stroke-width:2"><use href="#i-panel"/></svg> Cadastro Painel</button>
+          <button class="op-tab-btn" data-oppane="oppane-links"><svg width="18" height="18" style="stroke:currentColor;fill:none;stroke-width:2"><use href="#i-link"/></svg> Central de Links</button>
+          <button class="op-tab-btn" data-oppane="oppane-events"><svg width="18" height="18" style="stroke:currentColor;fill:none;stroke-width:2"><use href="#i-cal"/></svg> Gerenciar Eventos</button>
+          <button class="op-tab-btn" data-oppane="oppane-discord"><svg width="18" height="18" style="stroke:currentColor;fill:none;stroke-width:2"><use href="#i-chat"/></svg> Contas Discord</button>
+          <button class="op-tab-btn" data-oppane="oppane-admin"><svg width="18" height="18" style="stroke:currentColor;fill:none;stroke-width:2"><use href="#i-user"/></svg> Cadastrar Admin</button>
+        </div>
+
+        <!-- SUB-ABA 1: GERENCIAR PUBLICAÇÕES -->
+        <div id="oppane-posts" class="op-pane active">
+          <div class="card" style="margin-bottom:20px">
+            <h3 class="card-title" id="postFormTitle">
+              <span class="l"><svg><use href="#i-edit"/></svg>Criar Nova Publicação</span>
+              <button class="btn-secondary btn-sm" id="cancelPostEditBtn" style="display:none">Cancelar Edição</button>
+            </h3>
+            <form id="postForm">
+              <input type="hidden" id="editPostId">
+              <div style="display:grid;grid-template-columns:repeat(3, minmax(0, 1fr));gap:14px;margin-bottom:14px">
+                <div class="field">
+                  <label for="postCategory">Categoria de Publicação *</label>
+                  <select id="postCategory" required>
+                    <option value="Painel">Painel</option>
+                    <option value="Conta Discord">Conta Discord</option>
+                    <option value="Central de Links">Central de Links</option>
+                    <option value="Eventos">Eventos</option>
+                  </select>
+                </div>
+                <div class="field" style="grid-column: span 2">
+                  <label for="postTitle">Título da Publicação *</label>
+                  <input type="text" id="postTitle" placeholder="Ex: Novo conteúdo NZI" required>
+                </div>
+              </div>
+
+              <div class="field" style="margin-bottom:14px">
+                <label for="postDesc">Descrição do Conteúdo * (suporta parágrafos, listas - item e links)</label>
+                <textarea id="postDesc" rows="4" placeholder="Escreva o texto detalhado da publicação…" style="resize:vertical" required></textarea>
+              </div>
+
+              <div style="display:grid;grid-template-columns:repeat(3, minmax(0, 1fr));gap:14px;margin-bottom:18px">
+                <div class="field">
+                  <label for="postImage">URL da Imagem (opcional)</label>
+                  <input type="url" id="postImage" placeholder="https://exemplo.com/imagem.jpg">
+                </div>
+                <div class="field">
+                  <label for="postLink">Link de Ação URL (opcional)</label>
+                  <input type="url" id="postLink" placeholder="https://...">
+                </div>
+                <div class="field">
+                  <label for="postStatus">Status Inicial *</label>
+                  <select id="postStatus" required>
+                    <option value="Publicado" selected>Publicado</option>
+                    <option value="Rascunho">Rascunho</option>
+                    <option value="Despublicado">Despublicado</option>
+                  </select>
+                </div>
+              </div>
+
+              <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px">
+                <button type="button" class="btn-secondary" id="previewPostBtn">
+                  <svg width="16" height="16" style="stroke:currentColor;fill:none;stroke-width:2;vertical-align:middle;margin-right:6px"><use href="#i-eye"/></svg>
+                  Visualizar Prévia Antes de Publicar
+                </button>
+                <button type="submit" class="btn-action" id="savePostBtn">Salvar Alterações e Atualizar Dashboard</button>
+              </div>
+            </form>
+          </div>
+
+          <!-- Tabela de Publicações com Filtro por Categoria -->
+          <div class="card">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;flex-wrap:wrap;gap:10px">
+              <h3 class="card-title" style="margin:0"><span class="l"><svg><use href="#i-log"/></svg>Publicações Cadastradas</span></h3>
+              <div style="display:flex;gap:8px">
+                <select id="filterPostCategory" style="width:auto;padding:6px 12px;font-size:13px">
+                  <option value="Todos">Todas as Categorias</option>
+                  <option value="Painel">Painel</option>
+                  <option value="Conta Discord">Conta Discord</option>
+                  <option value="Central de Links">Central de Links</option>
+                  <option value="Eventos">Eventos</option>
+                </select>
+                <input type="search" id="adminPostSearch" placeholder="Filtrar publicações…" style="width:200px;padding:6px 12px;font-size:13px">
+              </div>
+            </div>
+            <div class="table-wrap">
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th>Categoria</th>
+                    <th>Título</th>
+                    <th>Status</th>
+                    <th>Data</th>
+                    <th>Autor</th>
+                    <th style="text-align:right">Ações</th>
+                  </tr>
+                </thead>
+                <tbody id="adminPostsTableBody">
+                  <tr><td colspan="6" style="text-align:center;color:var(--mute)">Carregando publicações…</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- SUB-ABA: CADASTRO PAINEL (Owner Nível 1) -->
+        <div id="oppane-painel" class="op-pane">
+          <div class="card" style="margin-bottom:20px">
+            <h3 class="card-title"><span class="l"><svg><use href="#i-panel"/></svg>Cadastrar Painel</span>
+              <span class="badge" style="margin-left:10px;font-size:11px;background:var(--accent)">Somente Owner · Nível 1</span>
+            </h3>
+            <p style="color:var(--mute);font-size:13px;margin:0 0 16px">Usuário e tipo de login são visíveis a admins; a senha é sempre criptografada com AES-256-GCM.</p>
+            <form id="painelAccountForm">
+              <input type="hidden" id="painelEditId">
+              <div style="display:grid;grid-template-columns:repeat(3, minmax(0, 1fr));gap:14px;margin-bottom:14px">
+                <div class="field">
+                  <label for="painelUser">User *</label>
+                  <input type="text" id="painelUser" placeholder="Usuário de login" required autocomplete="off">
+                </div>
+                <div class="field">
+                  <label for="painelSenha">Senha 🔒 *</label>
+                  <input type="password" id="painelSenha" placeholder="Senha (criptografada)" required autocomplete="new-password">
+                </div>
+                <div class="field">
+                  <label for="painelTipo">Tipo de Login *</label>
+                  <select id="painelTipo" required>
+                    <option value=".gov" selected>.gov</option>
+                    <option value=".cnj">.cnj</option>
+                    <option value="dox">dox</option>
+                  </select>
+                </div>
+              </div>
+              <div style="display:grid;grid-template-columns:repeat(2, minmax(0, 1fr));gap:14px;margin-bottom:14px">
+                <div class="field">
+                  <label for="painelLabel">Rótulo (opcional)</label>
+                  <input type="text" id="painelLabel" placeholder="Ex: Painel Principal">
+                </div>
+                <div class="field">
+                  <label for="painelStatus">Status</label>
+                  <select id="painelStatus">
+                    <option value="Ativo" selected>Ativo</option>
+                    <option value="Manutenção">Manutenção</option>
+                    <option value="Restrito">Restrito</option>
+                  </select>
+                </div>
+              </div>
+              <div class="field" style="margin-bottom:14px">
+                <label for="painelDesc">Observação</label>
+                <textarea id="painelDesc" rows="2" placeholder="Notas internas..."></textarea>
+              </div>
+              <div style="display:flex;justify-content:flex-end;gap:10px">
+                <button type="button" class="btn-secondary" id="cancelPainelEditBtn" style="display:none">Cancelar Edição</button>
+                <button type="submit" class="btn-action" id="savePainelBtn">Salvar Painel (Criptografado)</button>
+              </div>
+            </form>
+          </div>
+          <div class="card">
+            <h3 class="card-title"><span class="l"><svg><use href="#i-shield"/></svg>Painéis Cadastrados</span></h3>
+            <div class="table-wrap">
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th>User / Rótulo</th>
+                    <th>Tipo</th>
+                    <th>Status</th>
+                    <th>Cofre</th>
+                    <th style="text-align:right">Ações</th>
+                  </tr>
+                </thead>
+                <tbody id="adminPainelTableBody">
+                  <tr><td colspan="5" style="text-align:center;color:var(--mute)">Carregando…</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- SUB-ABA 2: CENTRAL DE LINKS -->
+        <div id="oppane-links" class="op-pane">
+          <div class="card">
+            <h3 class="card-title"><span class="l"><svg><use href="#i-link"/></svg>Configuração dos 4 Aplicativos Oficiais</span></h3>
+            <p style="color:var(--mute);margin:0 0 20px">Configure individualmente as URLs dos aplicativos. Por segurança, apenas protocolos HTTPS são aceitos. Links em branco serão exibidos como "indisponíveis".</p>
+            <div style="display:grid;grid-template-columns:repeat(2, minmax(0, 1fr));gap:18px" id="adminLinksFormsGrid">
+              <!-- Gerado via JS para Root, Discord, Telegram, TikTok -->
+            </div>
+          </div>
+        </div>
+
+        <!-- SUB-ABA 3: GERENCIAR EVENTOS -->
+        <div id="oppane-events" class="op-pane">
+          <div class="card" style="margin-bottom:20px">
+            <h3 class="card-title" id="eventFormTitle">
+              <span class="l"><svg><use href="#i-cal"/></svg>Cadastrar / Agendar Evento</span>
+              <button class="btn-secondary btn-sm" id="cancelEventEditBtn" style="display:none">Cancelar Edição</button>
+            </h3>
+            <form id="eventForm">
+              <input type="hidden" id="editEventId">
+              <div style="display:grid;grid-template-columns:repeat(3, minmax(0, 1fr));gap:14px;margin-bottom:14px">
+                <div class="field" style="grid-column: span 2">
+                  <label for="eventTitle">Título do Evento *</label>
+                  <input type="text" id="eventTitle" placeholder="Ex: Evento Confirmado" required>
+                </div>
+                <div class="field">
+                  <label for="eventStatus">Status do Evento *</label>
+                  <select id="eventStatus" required>
+                    <option value="Confirmado" selected>Confirmado</option>
+                    <option value="Agendado">Agendado</option>
+                    <option value="Em andamento">Em andamento</option>
+                    <option value="Finalizado">Finalizado</option>
+                    <option value="Cancelado">Cancelado</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="field" style="margin-bottom:14px">
+                <label for="eventDesc">Descrição do Evento</label>
+                <textarea id="eventDesc" rows="3" placeholder="Detalhes, regras, canais e prêmios do evento…" style="resize:vertical"></textarea>
+              </div>
+
+              <div style="display:grid;grid-template-columns:repeat(4, minmax(0, 1fr));gap:14px;margin-bottom:18px">
+                <div class="field">
+                  <label for="eventDateTime">Data e Horário de Início *</label>
+                  <input type="datetime-local" id="eventDateTime" required>
+                </div>
+                <div class="field">
+                  <label for="eventEndTime">Horário de Término (opcional)</label>
+                  <input type="text" id="eventEndTime" placeholder="Ex: 01:00">
+                </div>
+                <div class="field">
+                  <label for="eventTimezone">Fuso Horário</label>
+                  <input type="text" id="eventTimezone" value="America/Sao_Paulo (GMT-3)">
+                </div>
+                <div class="field" style="display:flex;flex-direction:column;justify-content:center">
+                  <label style="margin-bottom:8px">Visibilidade Pública</label>
+                  <label style="cursor:pointer;color:#fff;font-size:14px;display:flex;align-items:center;gap:8px">
+                    <input type="checkbox" id="eventPublished" checked style="width:auto"> Publicar no site
+                  </label>
+                </div>
+              </div>
+
+              <div style="display:flex;justify-content:flex-end">
+                <button type="submit" class="btn-action" id="saveEventBtn">Salvar Evento e Ativar Temporizador</button>
+              </div>
+            </form>
+          </div>
+
+          <div class="card">
+            <h3 class="card-title"><span class="l"><svg><use href="#i-cal"/></svg>Eventos Registrados</span></h3>
+            <div class="table-wrap">
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th>Título</th>
+                    <th>Data / Hora</th>
+                    <th>Status</th>
+                    <th>Temporizador</th>
+                    <th>Publicado</th>
+                    <th style="text-align:right">Ações</th>
+                  </tr>
+                </thead>
+                <tbody id="adminEventsTableBody">
+                  <tr><td colspan="6" style="text-align:center;color:var(--mute)">Carregando eventos…</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- SUB-ABA 4: CONTAS DISCORD & COFRE (Owner Nível 1) -->
+        <div id="oppane-discord" class="op-pane">
+          <div class="card" style="margin-bottom:20px">
+            <h3 class="card-title"><span class="l"><svg><use href="#i-chat"/></svg>Cadastrar Conta Discord</span>
+              <span class="badge" style="margin-left:10px;font-size:11px;background:var(--accent)">Somente Owner · Nível 1</span>
+            </h3>
+            <p style="color:var(--mute);font-size:13px;margin:0 0 16px">Campos sensíveis (senha e token) são criptografados com AES-256-GCM no servidor. Nunca armazenados em texto puro.</p>
+            <form id="discordAccountForm">
+              <input type="hidden" id="discEditId">
+              <div style="display:grid;grid-template-columns:repeat(2, minmax(0, 1fr));gap:14px;margin-bottom:14px">
+                <div class="field">
+                  <label for="discEmail">E-mail *</label>
+                  <input type="email" id="discEmail" placeholder="conta@exemplo.com" required autocomplete="off">
+                </div>
+                <div class="field">
+                  <label for="discStatus">Status da Conta</label>
+                  <select id="discStatus">
+                    <option value="Ativo" selected>Ativo</option>
+                    <option value="Manutenção">Manutenção</option>
+                    <option value="Restrito">Restrito</option>
+                  </select>
+                </div>
+              </div>
+              <div style="display:grid;grid-template-columns:repeat(2, minmax(0, 1fr));gap:14px;margin-bottom:14px">
+                <div class="field">
+                  <label for="discSenha">Senha 🔒</label>
+                  <input type="password" id="discSenha" placeholder="Senha da conta (criptografada)" autocomplete="new-password">
+                </div>
+                <div class="field">
+                  <label for="discToken">Token 🔒</label>
+                  <input type="password" id="discToken" placeholder="Token / Bot Token (criptografado)" autocomplete="off">
+                </div>
+              </div>
+              <div class="field" style="margin-bottom:14px">
+                <label for="discTitle">Identificador / Rótulo (opcional)</label>
+                <input type="text" id="discTitle" placeholder="Ex: Conta Principal NZI ou Bot Moderação">
+              </div>
+              <div class="field" style="margin-bottom:14px">
+                <label for="discDesc">Descrição Pública</label>
+                <textarea id="discDesc" rows="2" placeholder="Finalidade da conta (visível apenas se divulgado)..."></textarea>
+              </div>
+              <div style="display:flex;gap:20px;flex-wrap:wrap;margin-bottom:14px">
+                <label style="cursor:pointer;color:#fff;font-size:14px;display:flex;align-items:center;gap:8px">
+                  <input type="checkbox" id="discIsPublic" checked style="width:auto"> Divulgar informações básicas no dashboard público
+                </label>
+                <label style="cursor:pointer;color:var(--accent-2);font-size:14px;display:flex;align-items:center;gap:8px;font-weight:700">
+                  <input type="checkbox" id="discIsReward" checked style="width:auto"> 🎁 Disponível como Recompensa (Reward) para Membros
+                </label>
+              </div>
+              <div style="display:flex;justify-content:flex-end;gap:10px">
+                <button type="button" class="btn-secondary" id="cancelDiscEditBtn" style="display:none">Cancelar Edição</button>
+                <button type="submit" class="btn-action" id="saveDiscBtn">Salvar Conta (Criptografada)</button>
+              </div>
+            </form>
+          </div>
+
+          <div class="card">
+            <h3 class="card-title"><span class="l"><svg><use href="#i-shield"/></svg>Contas Discord &amp; Rewards Cadastrados</span></h3>
+            <div class="table-wrap">
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th>E-mail / Rótulo</th>
+                    <th>Status</th>
+                    <th>Reward</th>
+                    <th>Público</th>
+                    <th>Cofre</th>
+                    <th style="text-align:right">Ações</th>
+                  </tr>
+                </thead>
+                <tbody id="adminDiscordTableBody">
+                  <tr><td colspan="6" style="text-align:center;color:var(--mute)">Carregando contas…</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- SUB-ABA 5: CADASTRAR NOVO ADMINISTRADOR -->
+        <div id="oppane-admin" class="op-pane">
+          <div class="card pin-box" style="max-width:560px;margin:0 auto">
+            <h3 class="card-title"><span class="l"><svg><use href="#i-users"/></svg>Cadastrar Integrante / Administrador</span></h3>
+            <p style="color:var(--mute);margin:0 0 16px">Cadastre novos integrantes na hierarquia da NZI. PIN deve conter exatamente 6 dígitos numéricos.</p>
+            <form id="newAdminForm">
+              <div class="field" style="margin-bottom:14px">
+                <label for="newAdminUsername">Codinome de Usuário *</label>
+                <input type="text" id="newAdminUsername" placeholder="Ex: admin_nzi" required>
+              </div>
+              <div class="field" style="margin-bottom:14px">
+                <label for="newAdminName">Nome de Exibição *</label>
+                <input type="text" id="newAdminName" placeholder="Ex: Alex NZI" required>
+              </div>
+              <div class="field" style="margin-bottom:14px">
+                <label for="newAdminRole">Cargo / Função *</label>
+                <select id="newAdminRole">
+                  <option value="Founder" selected>Founder (Fundador - Nível 2 / Admin)</option>
+                  <option value="Owner">Owner (Dono - Nível 1 / Admin)</option>
+                  <option value="Posse">Posse (Nível 3)</option>
+                  <option value="Member">Member (Nível 4)</option>
+                </select>
+              </div>
+              <div class="field" style="margin-bottom:20px">
+                <label for="newAdminPin">PIN de Login (6 dígitos numéricos) *</label>
+                <input type="password" id="newAdminPin" maxlength="6" inputmode="numeric" pattern="\d{6}" placeholder="••••••" style="letter-spacing:.3em;text-align:center;font-size:20px" required>
+              </div>
+              <button type="submit" class="btn-action" style="width:100%">Cadastrar Administrador</button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= HIERARQUIA ================= -->
+    <section id="tab-members" class="tab-pane">
+      <div class="page-head" style="display:flex;justify-content:space-between;align-items:flex-end;flex-wrap:wrap;gap:14px">
+        <div>
+          <h2>Quadro da <span>hierarquia</span></h2>
+          <p>Status e avatares dos integrantes da NZI Mafia em tempo real</p>
+        </div>
+      </div>
+      <div class="card">
+        <div class="table-wrap">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Nível</th>
+                <th>Ícone</th>
+                <th>Codinome</th>
+                <th>Cargo</th>
+                <th>Cota</th>
+                <th>Repasse semanal</th>
+                <th>Status</th>
+                <th>Último login</th>
+                <th style="text-align:right">Ação</th>
+              </tr>
+            </thead>
+            <tbody id="membersTableBody"></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= SEGURANÇA ================= -->
+    <section id="tab-security" class="tab-pane">
+      <div class="page-head"><h2>Segurança <span>// PIN</span></h2><p>Altere seu PIN de 6 dígitos numéricos</p></div>
+      <div class="card pin-box" style="margin:0 auto">
+        <p style="margin-top:0;color:var(--mute)">Seu PIN de 6 dígitos é individual e intransferível.</p>
+        <form id="changePinForm">
+          <div class="field" style="margin-bottom:16px"><label for="currentPin">PIN atual</label>
+            <input type="password" id="currentPin" maxlength="6" inputmode="numeric" placeholder="••••••" style="font-size:20px;letter-spacing:.35em;text-align:center" required></div>
+          <div class="field" style="margin-bottom:16px"><label for="newPin">Novo PIN (6 dígitos)</label>
+            <input type="password" id="newPin" maxlength="6" inputmode="numeric" placeholder="••••••" style="font-size:20px;letter-spacing:.35em;text-align:center" required></div>
+          <div class="field" style="margin-bottom:20px"><label for="confirmNewPin">Confirmar novo PIN</label>
+            <input type="password" id="confirmNewPin" maxlength="6" inputmode="numeric" placeholder="••••••" style="font-size:20px;letter-spacing:.35em;text-align:center" required></div>
+          <button type="submit" class="btn-action" style="width:100%">Salvar novo PIN</button>
+        </form>
+      </div>
+    </section>
+
+    <!-- ================= AUDITORIA ================= -->
+    <section id="tab-audit" class="tab-pane">
+      <div class="page-head"><h2>Logs de <span>auditoria</span></h2><p>Histórico de acessos, logins e eventos de segurança com IP e dispositivo</p></div>
+
+      <!-- Painel de Segurança IP/HWID — visível apenas para admins -->
+      <div class="card admin-only" id="securityPanel" style="margin-bottom:20px">
+        <div style="display:flex;align-items:center;gap:12px;margin-bottom:16px">
+          <svg width="22" height="22" fill="none" stroke="var(--accent)" stroke-width="2"><use href="#i-shield"/></svg>
+          <h3 style="margin:0;font:700 18px var(--display);text-transform:uppercase;color:#fff">Gestão de IP Lock <span style="color:var(--accent)">&amp;</span> HWID Lock</h3>
+        </div>
+        <p style="color:var(--mute);font-size:13px;margin:0 0 16px">Membros com IP ou dispositivo bloqueado podem ser liberados aqui. O próximo login registrará automaticamente o novo IP/dispositivo como confiável.</p>
+        <div class="table-wrap">
+          <table class="data-table" id="securityTable">
+            <thead><tr>
+              <th>Membro</th><th>Cargo</th>
+              <th>IP Confiável</th>
+              <th>HWID (Dispositivo)</th>
+              <th>Último Login</th>
+              <th>Ações</th>
+            </tr></thead>
+            <tbody id="securityTableBody"><tr><td colspan="6" style="text-align:center;color:var(--mute)">Carregando...</td></tr></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Tabela de Logs -->
+      <div class="card">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
+          <h3 style="margin:0;font:700 16px var(--display);text-transform:uppercase;color:#fff">Log de <span style="color:var(--accent)">Acessos</span></h3>
+          <button class="btn-secondary" style="font-size:12px;padding:6px 14px" onclick="loadAuditLogs()">↻ Atualizar</button>
+        </div>
+        <div class="table-wrap">
+          <table class="data-table">
+            <thead><tr><th>Data/Hora</th><th>Membro</th><th>Cargo</th><th>Ação</th><th>IP Origem</th><th>HWID</th><th>Status</th></tr></thead>
+            <tbody id="auditTableBody"></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+  </main>
+</div>
+
+<!-- ================= MODAIS GLOBAIS ================= -->
+
+<!-- 1. Modal de Prévia de Publicação -->
+<div class="nzi-modal-overlay" id="previewModal">
+  <div class="nzi-modal-box">
+    <div class="modal-header">
+      <h3>Prévia da <span>Publicação</span></h3>
+      <button class="modal-close-btn" data-close-modal="previewModal">&times;</button>
+    </div>
+    <div style="margin-bottom:14px">
+      <span class="post-category-badge" id="prevBadge">Categoria</span>
+      <span class="post-date" style="margin-left:10px" id="prevDate">Agora</span>
+    </div>
+    <h2 id="prevTitle" style="font:800 28px/1.2 var(--display);text-transform:uppercase;margin:0 0 12px;color:#fff">Título do Conteúdo</h2>
+    <div id="prevImageWrap" style="display:none;margin-bottom:14px">
+      <img id="prevImage" src="" alt="Imagem do post" style="width:100%;max-height:240px;object-fit:cover;border-radius:10px;border:1px solid var(--line)">
+    </div>
+    <div id="prevBody" class="post-body" style="background:rgba(0,0,0,.4);padding:14px;border-radius:10px;border:1px solid var(--line)"></div>
+    <div id="prevLinkWrap" style="display:none;margin-top:14px">
+      <a id="prevLinkBtn" class="btn-out" href="#" target="_blank" rel="noopener">Acessar Link Oficial ↗</a>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-secondary" data-close-modal="previewModal">Fechar Prévia</button>
+      <button class="btn-action" id="confirmPublishFromPrevBtn">Confirmar &amp; Salvar</button>
+    </div>
+  </div>
+</div>
+
+<!-- 2. Modal de Confirmação de Exclusão -->
+<div class="nzi-modal-overlay" id="confirmModal">
+  <div class="nzi-modal-box" style="max-width:480px">
+    <div class="modal-header">
+      <h3 style="color:var(--accent-2)">Confirmar <span>Exclusão</span></h3>
+      <button class="modal-close-btn" data-close-modal="confirmModal">&times;</button>
+    </div>
+    <p id="confirmModalText" style="color:#d8c0c1;font-size:16px;line-height:1.5;margin:0 0 18px">
+      Tem certeza que deseja excluir este conteúdo? Esta ação não pode ser desfeita e os dados serão removidos permanentemente.
+    </p>
+    <div class="modal-footer">
+      <button class="btn-secondary" data-close-modal="confirmModal">Cancelar</button>
+      <button class="btn-danger" id="executeConfirmBtn">Confirmar Exclusão</button>
+    </div>
+  </div>
+</div>
+
+<!-- 3. Modal de Revelação de Credencial Discord -->
+<div class="nzi-modal-overlay" id="revealModal">
+  <div class="nzi-modal-box" style="max-width:520px">
+    <div class="modal-header">
+      <h3>Cofre de <span>Credenciais</span></h3>
+      <button class="modal-close-btn" data-close-modal="revealModal">&times;</button>
+    </div>
+    <div id="revealStepAuth">
+      <p style="color:var(--mute);margin:0 0 14px">
+        Esta ação descriptografa o segredo no servidor. Digite seu PIN de administrador para autenticar a consulta.
+      </p>
+      <form id="revealPinForm">
+        <input type="hidden" id="revealAccountId">
+        <div class="field" style="margin-bottom:16px">
+          <label for="revealPinInput">Seu PIN de Administrador (6 dígitos)</label>
+          <input type="password" id="revealPinInput" maxlength="6" inputmode="numeric" placeholder="••••••" style="letter-spacing:.35em;text-align:center;font-size:22px" required>
+        </div>
+        <div class="modal-footer" style="padding-top:10px">
+          <button type="button" class="btn-secondary" data-close-modal="revealModal">Cancelar</button>
+          <button type="submit" class="btn-action">Liberar Credencial</button>
+        </div>
+      </form>
+    </div>
+    <div id="revealStepResult" style="display:none">
+      <p style="color:var(--green);font-weight:700;margin:0 0 10px">● Credencial decodificada com sucesso!</p>
+      <div class="field" style="margin-bottom:14px">
+        <label id="revealSecretTitle">Segredo Seguro:</label>
+        <div style="display:flex;gap:8px;flex-direction:column">
+          <textarea id="revealSecretValue" rows="4" readonly style="width:100%;box-sizing:border-box;font-family:var(--mono);font-size:13px;background:#050203;color:var(--accent-2);border:1px solid var(--line-strong);border-radius:8px;padding:10px;resize:vertical"></textarea>
+          <button type="button" class="btn-out" id="copySecretBtn" style="align-self:flex-start">Copiar</button>
+        </div>
+      </div>
+      <p style="color:var(--mute);font-size:12px;margin:0">Esta visualização foi registrada no livro de auditoria.</p>
+      <div class="modal-footer">
+        <button class="btn-secondary" data-close-modal="revealModal">Fechar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal de Confirmação de Resgate de Recompensa -->
+<div class="nzi-modal-overlay" id="claimConfirmModal">
+  <div class="nzi-modal-box" style="max-width:500px">
+    <div class="modal-header">
+      <h3 style="color:#67e87a">🎁 Reivindicar <span>Recompensa</span></h3>
+      <button class="modal-close-btn" data-close-modal="claimConfirmModal">&times;</button>
+    </div>
+    <div style="padding:10px 0">
+      <p id="claimConfirmModalText" style="color:#e6d0d2;font-size:15px;line-height:1.6;margin:0 0 20px">
+        Deseja resgatar esta conta?
+      </p>
+      <div class="modal-footer" style="padding-top:14px;border-top:1px solid var(--line)">
+        <button type="button" class="btn-secondary" data-close-modal="claimConfirmModal">Cancelar</button>
+        <button type="button" class="btn-action" id="btnExecuteClaim" style="background:#2e7d32;border-color:#4caf50;color:#fff;font-weight:700">Confirmar Resgate 🎁</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 4. Modal de Credenciais de Recompensa Resgatada (Reward Exclusivo) -->
+<div class="nzi-modal-overlay" id="claimedRewardModal">
+  <div class="nzi-modal-box" style="max-width:540px">
+    <div class="modal-header">
+      <h3>🎁 Recompensa <span>Resgatada</span></h3>
+      <button class="modal-close-btn" data-close-modal="claimedRewardModal">&times;</button>
+    </div>
+    <div style="padding:10px 0">
+      <div style="background:rgba(103,232,122,0.08);border:1px solid #2e7d32;border-radius:6px;padding:12px;margin-bottom:16px">
+        <p style="color:#67e87a;font-weight:700;margin:0 0 4px;font-size:14px">✓ Reivindicação Concluída com Sucesso!</p>
+        <p style="color:#d8c4c5;font-size:13px;margin:0">
+          Esta conta foi vinculada ao seu usuário. Ela foi <b>ocultada do dashboard</b> para todos os outros membros e agora é exclusiva sua.
+        </p>
+      </div>
+
+      <h4 id="claimedModalTitle" style="color:#fff;margin:0 0 12px;font:700 16px var(--mono)">Conta Discord</h4>
+
+      <div class="field" style="margin-bottom:12px" id="fieldClaimedEmailWrap">
+        <label>E-mail / Usuário Discord:</label>
+        <div style="display:flex;gap:8px">
+          <input type="text" id="claimedEmailVal" readonly style="font-family:var(--mono);font-size:13px;background:#050203;color:#fff;border-color:var(--line-strong)">
+          <button type="button" class="btn-out" onclick="window.copyInputVal('claimedEmailVal')">Copiar</button>
+        </div>
+      </div>
+
+      <div class="field" style="margin-bottom:12px" id="fieldClaimedSenhaWrap">
+        <label>Senha:</label>
+        <div style="display:flex;gap:8px">
+          <input type="text" id="claimedSenhaVal" readonly style="font-family:var(--mono);font-size:13px;background:#050203;color:var(--accent-2);border-color:var(--line-strong)">
+          <button type="button" class="btn-out" onclick="window.copyInputVal('claimedSenhaVal')">Copiar</button>
+        </div>
+      </div>
+
+      <div class="field" style="margin-bottom:14px" id="fieldClaimedTokenWrap">
+        <label>Token Discord:</label>
+        <div style="display:flex;gap:8px">
+          <input type="text" id="claimedTokenVal" readonly style="font-family:var(--mono);font-size:13px;background:#050203;color:var(--accent-2);border-color:var(--line-strong)">
+          <button type="button" class="btn-out" onclick="window.copyInputVal('claimedTokenVal')">Copiar</button>
+        </div>
+      </div>
+
+      <div class="modal-footer" style="padding-top:14px;border-top:1px solid var(--line)">
+        <button class="btn-action" data-close-modal="claimedRewardModal" style="width:100%">Entendido e Salvo</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal de Edição de Ícone / Avatar Hospedado (Imgur) -->
+<div class="nzi-modal-overlay" id="editAvatarModal">
+  <div class="nzi-modal-box" style="max-width:500px">
+    <div class="modal-header">
+      <h3 style="color:#fff">Ícone do <span>Integrante</span></h3>
+      <button class="modal-close-btn" data-close-modal="editAvatarModal">&times;</button>
+    </div>
+    <form id="avatarForm" style="padding-top:10px">
+      <input type="hidden" id="avatarMemberId">
+      <p style="color:var(--mute);margin:0 0 16px;font-size:14px;line-height:1.5">
+        Defina a imagem de perfil para <b id="avatarMemberName" style="color:#fff"></b>.<br>
+        Cole qualquer link de imagem hospedada no <b>Imgur</b> (ex: <code style="color:var(--accent-2)">https://i.imgur.com/exemplo.png</code> ou <code style="color:var(--accent-2)">https://imgur.com/exemplo</code>).
+      </p>
+
+      <div style="display:flex;align-items:center;gap:16px;margin-bottom:16px;padding:12px;background:rgba(255,42,58,0.03);border:1px solid var(--line-strong);border-radius:12px">
+        <div style="width:58px;height:58px;border-radius:50%;overflow:hidden;border:2px solid var(--accent);background:#120508;display:flex;align-items:center;justify-content:center;flex-shrink:0;box-shadow:0 0 15px rgba(255,42,58,0.3)">
+          <img id="avatarPreviewImg" src="" alt="Prévia" style="width:100%;height:100%;object-fit:cover;display:none">
+          <span id="avatarPreviewInitials" style="font-weight:800;font-size:16px;color:var(--accent-2)">NZI</span>
+        </div>
+        <div style="flex:1">
+          <span style="font-size:13px;font-weight:700;color:#fff">Prévia em Tempo Real</span><br>
+          <small style="color:var(--dim);font-size:11px">A foto será aplicada no cabeçalho e na tabela de hierarquia.</small>
+        </div>
+      </div>
+
+      <div class="field" style="margin-bottom:16px">
+        <label for="avatarUrlInput">URL da Foto / Ícone (Imgur ou HTTPS):</label>
+        <input type="url" id="avatarUrlInput" placeholder="https://i.imgur.com/exemplo.png" style="font-family:var(--mono);font-size:13px">
+      </div>
+
+      <div class="modal-footer" style="padding-top:14px;display:flex;justify-content:space-between;border-top:1px solid var(--line)">
+        <button type="button" class="btn-out" id="btnRemoveAvatar" style="color:var(--dim);border-color:var(--line)">Remover Ícone</button>
+        <div style="display:flex;gap:8px">
+          <button type="button" class="btn-secondary" data-close-modal="editAvatarModal">Cancelar</button>
+          <button type="submit" class="btn-action">Salvar Ícone</button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- ================= JAVASCRIPT DO SISTEMA ================= -->
+<script src="/tracking.js"></script>
+<script>
+(function () {
+  let currentUser = null;
+  let isAdmin = false;
+  let allPosts = [];
+  let allEvents = [];
+  let pendingDeleteAction = null;
+  const $ = (id) => document.getElementById(id);
+  const esc = (s) => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+
+  /* ---------- Formatação e Markdown Básico ---------- */
+  function renderFormattedText(txt) {
+    if (!txt) return '';
+    const clean = esc(txt);
+    const paragraphs = clean.split(/\n\n+/);
+    return paragraphs.map(p => {
+      // Listas
+      if (p.includes('\n- ') || p.startsWith('- ')) {
+        const lines = p.split('\n');
+        let html = '';
+        let inList = false;
+        lines.forEach(l => {
+          if (l.trim().startsWith('- ')) {
+            if (!inList) { html += '<ul>'; inList = true; }
+            html += `<li>${parseInlineLinks(l.trim().substring(2))}</li>`;
+          } else {
+            if (inList) { html += '</ul>'; inList = false; }
+            if (l.trim()) html += `<p>${parseInlineLinks(l)}</p>`;
+          }
+        });
+        if (inList) html += '</ul>';
+        return html;
+      }
+      return `<p>${parseInlineLinks(p.replace(/\n/g, '<br>'))}</p>`;
+    }).join('');
+  }
+
+  function parseInlineLinks(str) {
+    return str.replace(/\[(.*?)\]\((https?:\/\/[^\s"'<>]+)\)/g, (m, text, url) => {
+      const safeUrl = url.replace(/["'<>]/g, '');
+      return `<a href="${safeUrl}" target="_blank" rel="noopener noreferrer">${text} ↗</a>`;
+    });
+  }
+
+  /* ---------- Notificações Toast ---------- */
+  let alertTimer;
+  function showAlert(msg, type = 'success') {
+    const el = $('globalAlert');
+    el.textContent = `> ${msg}`;
+    el.className = `alert-banner ${type}`;
+    clearTimeout(alertTimer);
+    alertTimer = setTimeout(() => { el.style.display = 'none'; el.className = 'alert-banner'; }, 5000);
+    el.style.display = 'block';
+  }
+
+  /* ---------- Modais ---------- */
+  function openModal(id) {
+    const m = $(id);
+    if (m) {
+      m.classList.add('active');
+      m.style.display = 'flex';
+    }
+  }
+  function closeModal(id) {
+    const m = $(id);
+    if (m) {
+      m.classList.remove('active');
+      m.style.display = 'none';
+    }
+  }
+  document.querySelectorAll('[data-close-modal]').forEach(b => {
+    b.addEventListener('click', () => closeModal(b.dataset.closeModal));
+  });
+
+  /* ---------- Helper de Comunicação com a API (Cookies + Bearer Token) ---------- */
+  async function apiFetch(url, options = {}) {
+    let token = null;
+    try { token = localStorage.getItem('nzi_token'); } catch (e) {}
+    const headers = { 'X-Requested-With': 'XMLHttpRequest', ...(options.headers || {}) };
+    if (token) {
+      headers['Authorization'] = 'Bearer ' + token;
+    }
+    if (options.body && typeof options.body === 'string' && !headers['Content-Type']) {
+      headers['Content-Type'] = 'application/json';
+    }
+    return fetch(url, {
+      credentials: 'include',
+      ...options,
+      headers
+    });
+  }
+
+  /* ---------- Navegação entre Abas Principais ---------- */
+  const navItems = document.querySelectorAll('.nav-item[data-tab]');
+  const panes = document.querySelectorAll('.tab-pane');
+
+  function goTo(id) {
+    navItems.forEach(b => b.classList.toggle('active', b.dataset.tab === id));
+    panes.forEach(p => p.classList.toggle('active', p.id === id));
+    document.body.classList.remove('menu-open');
+    const isHome = id === 'tab-overview';
+    $('heroHeader').hidden = !isHome;
+    if (location.hash !== '#' + id) history.replaceState(null, '', '#' + id);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+
+    if (id === 'tab-overview') loadDashboardStats();
+    if (id === 'tab-painel') loadPainelPosts();
+    if (id === 'tab-discord') loadDiscordAccounts();
+    if (id === 'tab-links') loadCentralLinks();
+    if (id === 'tab-eventos') loadPublicEvents();
+    if (id === 'tab-operations') checkOperationsAccess();
+    if (id === 'tab-members') loadMembers();
+    if (id === 'tab-audit') { loadAuditLogs(); loadSecurityPanel(); }
+    syncTracking();
+  }
+
+  /* Acessos por estado: aparece só na página inicial e só para administradores (o servidor também exige admin) */
+  function syncTracking() {
+    if (!window.NZITracking) return;
+    const onHome = $('tab-overview').classList.contains('active');
+    $('trkHome').hidden = !onHome;
+    if (isAdmin && onHome) window.NZITracking.start(); else window.NZITracking.stop();
+  }
+
+  navItems.forEach(b => b.addEventListener('click', () => goTo(b.dataset.tab)));
+  document.querySelectorAll('[data-goto]').forEach(el => el.addEventListener('click', (e) => {
+    e.preventDefault();
+    goTo(el.dataset.goto);
+  }));
+
+  $('menuBtn').addEventListener('click', () => document.body.classList.toggle('menu-open'));
+  $('scrim').addEventListener('click', () => document.body.classList.remove('menu-open'));
+
+  /* ---------- Subnavegação de Operações ---------- */
+  const opTabBtns = document.querySelectorAll('.op-tab-btn[data-oppane]');
+  const opPanes = document.querySelectorAll('.op-pane');
+  function switchOpPane(paneId) {
+    opTabBtns.forEach(b => b.classList.toggle('active', b.dataset.oppane === paneId));
+    opPanes.forEach(p => p.classList.toggle('active', p.id === paneId));
+    if (paneId === 'oppane-posts') loadAdminPosts();
+    if (paneId === 'oppane-painel') loadAdminPainel();
+    if (paneId === 'oppane-links') loadAdminLinks();
+    if (paneId === 'oppane-events') loadAdminEvents();
+    if (paneId === 'oppane-discord') loadAdminDiscord();
+  }
+  opTabBtns.forEach(b => b.addEventListener('click', () => switchOpPane(b.dataset.oppane)));
+
+  /* ---------- Autenticação & Sessão ---------- */
+  async function checkAuth() {
+    try {
+      const res = await apiFetch('/api/auth/current');
+      const data = await res.json();
+      if (data.success && data.authenticated) {
+        currentUser = data.member;
+        isAdmin = Boolean(data.isAdmin);
+        renderUserProfile();
+      } else {
+        currentUser = null;
+        isAdmin = false;
+        renderVisitorProfile();
+      }
+    } catch (e) {
+      renderVisitorProfile();
+    }
+    syncTracking();
+    // Carrega dados iniciais da página com privilégios sincronizados
+    loadDashboardStats();
+    loadDiscordAccounts();
+    loadPainelPosts();
+    loadCentralLinks();
+    loadPublicEvents();
+    startCountdownLoop();
+  }
+
+  function renderUserProfile() {
+    $('profileName').textContent = currentUser.name;
+    $('profileRole').textContent = `${currentUser.role} (Nível ${currentUser.level})`;
+    const initials = currentUser.name.split(/\s+/).map(w => w[0]).join('').slice(0, 3).toUpperCase();
+    if (currentUser.avatarUrl && $('profileAvatarImg')) {
+      $('profileAvatarImg').src = currentUser.avatarUrl;
+      $('profileAvatarImg').style.display = 'block';
+      $('avatarInitials').style.display = 'none';
+    } else {
+      if ($('profileAvatarImg')) $('profileAvatarImg').style.display = 'none';
+      $('avatarInitials').style.display = 'block';
+      $('avatarInitials').textContent = initials;
+    }
+    $('authActionBtn').textContent = 'Sair';
+    $('adminBadgeText').textContent = isAdmin ? '● Administrador' : '● Membro';
+    $('adminBadgeText').style.color = isAdmin ? 'var(--accent)' : 'var(--green)';
+    document.querySelectorAll('.admin-only').forEach(el => el.style.display = isAdmin ? '' : 'none');
+    if (location.hash === '#tab-operations') checkOperationsAccess();
+  }
+
+  function renderVisitorProfile() {
+    $('profileName').textContent = 'Visitante';
+    $('profileRole').textContent = 'Acesso Público';
+    if ($('profileAvatarImg')) $('profileAvatarImg').style.display = 'none';
+    $('avatarInitials').style.display = 'block';
+    $('avatarInitials').textContent = 'NZI';
+    $('authActionBtn').textContent = 'Login';
+    $('adminBadgeText').textContent = 'Modo Visitante';
+    $('adminBadgeText').style.color = 'var(--mute)';
+    document.querySelectorAll('.admin-only').forEach(el => el.style.display = 'none');
+  }
+
+  $('authActionBtn').addEventListener('click', async () => {
+    if (currentUser) {
+      try { localStorage.removeItem('nzi_token'); } catch (e) {}
+      try { await apiFetch('/api/auth/logout', { method: 'POST' }); } catch (e) {}
+      location.href = '/login';
+    } else {
+      location.href = '/login';
+    }
+  });
+
+  /* ---------- 4. DASHBOARD - ESTATÍSTICAS REAIS ---------- */
+  async function loadDashboardStats() {
+    try {
+      const res = await fetch('/api/public/stats');
+      const data = await res.json();
+      if (!data.success) return;
+      const s = data.stats;
+
+      // Cards superiores
+      $('kpiPainel').textContent = s.postsByCategory['Painel'] || 0;
+      $('kpiEventosConfirmed').textContent = s.eventsStats.confirmed || 0;
+      $('kpiEventosActive').textContent = `${s.eventsStats.active || 0} em andamento`;
+      $('kpiLinks').textContent = `${s.availableLinksCount}/4`;
+
+      // Resumo da lateral
+      $('sumCatPainel').textContent = `${s.postsByCategory['Painel'] || 0} publicações`;
+      $('sumCatDiscord').textContent = `${s.postsByCategory['Conta Discord'] || 0} publicações`;
+      $('sumCatLinks').textContent = `${s.postsByCategory['Central de Links'] || 0} publicações`;
+      $('sumCatEventos').textContent = `${s.postsByCategory['Eventos'] || 0} publicações`;
+      $('sumEventosStatus').textContent = `${s.eventsStats.active} ativos · ${s.eventsStats.confirmed} confirmados`;
+    } catch (e) {
+      console.error("Erro ao carregar estatísticas do dashboard:", e);
+    }
+  }
+
+  /* ---------- 6. PÁGINA PAINEL ---------- */
+  async function loadPainelPosts() {
+    const container = $('painelPostsContainer');
+    try {
+      const res = await apiFetch(isAdmin ? '/api/admin/painel' : '/api/public/painel');
+      const data = await res.json();
+      if (!data.success) return;
+      if (!data.accounts || !data.accounts.length) {
+        container.innerHTML = '<p style="color:var(--mute);text-align:center;grid-column:1/-1;padding:30px">[ Nenhum Painel cadastrado ]</p>';
+        return;
+      }
+      container.innerHTML = data.accounts.map(a => `
+        <article class="post-card">
+          <div>
+            <div class="post-top">
+              <span class="post-category-badge">Painel</span>
+              <span class="post-date">${esc(a.createdAt || '')}</span>
+            </div>
+            <h3 class="post-title">${esc(a.label || a.user || 'Painel')}</h3>
+            <p style="color:#d8c4c5;font-size:14px;margin:0 0 12px">${esc(a.description || 'Credencial de painel protegida')}</p>
+            <div style="background:rgba(0,0,0,.35);padding:10px;border-radius:8px;border:1px solid var(--line);font-size:13px;margin-bottom:12px">
+              <span style="color:var(--mute);display:block;font-size:11px;text-transform:uppercase;margin-bottom:4px">User / Tipo:</span>
+              <span style="color:#fff">${esc(a.user || '***')} · ${esc(a.tipoLogin || '-')}</span>
+            </div>
+          </div>
+          <div class="post-footer">
+            <span style="font:600 11px var(--mono);color:var(--green)">🔒 Senha Protegida</span>
+            ${isAdmin && a.hasCredentials ? `<button class="btn-out btn-sm" onclick="window.revealPainel('${a.id}')">Visualizar</button>` : ''}
+            ${isAdmin ? `<button class="btn-out btn-sm" onclick="window.editPainel('${a.id}')">Editar</button>
+            <button class="btn-out btn-sm" style="color:var(--accent)" onclick="window.deletePainel('${a.id}')">Excluir</button>` : ''}
+          </div>
+        </article>
+      `).join('');
+    } catch (e) {
+      container.innerHTML = '<p style="color:var(--accent);text-align:center;grid-column:1/-1">Erro ao carregar Painéis.</p>';
+    }
+  }
+  $('newPostPainelBtn').addEventListener('click', () => {
+    goTo('tab-operations');
+    switchOpPane('oppane-painel');
+    $('painelUser').focus();
+  });
+
+  function renderPostCardHTML(p) {
+    return `
+      <article class="post-card">
+        <div>
+          <div class="post-top">
+            <span class="post-category-badge">${esc(p.category)}</span>
+            <span class="post-date">${esc(p.publishedAt || p.createdAt)}</span>
+          </div>
+          <h3 class="post-title">${esc(p.title)}</h3>
+          ${p.image ? `<img class="post-image" src="${esc(p.image)}" alt="${esc(p.title)}" onerror="this.style.display='none'">` : ''}
+          <div class="post-body">${renderFormattedText(p.description)}</div>
+        </div>
+        <div class="post-footer">
+          <span class="post-author">Por: ${esc(p.author || 'Administrador')}</span>
+          ${p.link ? `<a class="btn-out btn-sm" href="${esc(p.link)}" target="_blank" rel="noopener">Acessar Link ↗</a>` : ''}
+        </div>
+      </article>
+    `;
+  }
+
+  let discordAccountsMap = {};
+  /* ---------- 7. PÁGINA CONTA DISCORD & REWARDS ---------- */
+  async function loadDiscordAccounts() {
+    const container = $('discordAccountsContainer');
+    try {
+      const res = await apiFetch(isAdmin ? '/api/admin/discord' : '/api/public/discord');
+      const data = await res.json();
+      if (!data.success) return;
+      discordAccountsMap = {};
+      if (!data.accounts || !data.accounts.length) {
+        container.innerHTML = '<p style="color:var(--mute);text-align:center;grid-column:1/-1;padding:30px">[ Nenhuma conta Discord ou recompensa disponível no momento ]</p>';
+        return;
+      }
+      data.accounts.forEach(acc => { discordAccountsMap[acc.id] = acc; });
+      container.innerHTML = data.accounts.map(a => {
+        // 1. Conta reivindicada pelo membro conectado (Exclusiva dele)
+        if (a.isClaimedByMe) {
+          return `
+            <article class="post-card" style="border-color:#2e7d32;background:rgba(46,125,50,0.06)">
+              <div>
+                <div class="post-top">
+                  <span class="badge" style="background:#1b3d22;color:#67e87a;border:1px solid #2e7d32">🏆 Reivindicada por Você</span>
+                  <span class="post-date" style="color:var(--accent-2);font-weight:700">${esc(a.email || 'Conta Discord')}</span>
+                </div>
+                <h3 class="post-title" style="color:#fff">${esc(a.title || a.email || 'Conta Discord')}</h3>
+                <p style="color:#d8c4c5;font-size:14px;margin:0 0 10px">${esc(a.description || 'Conta de recompensa resgatada com sucesso.')}</p>
+                <div style="margin-bottom:12px;padding:8px 10px;background:rgba(103,232,122,0.08);border-left:3px solid #67e87a;border-radius:4px;font-size:12px;color:#bbf7d0">
+                  <b>Exclusivo:</b> Esta conta está vinculada ao seu usuário e foi <b>oculta do dashboard</b> para todos os demais membros.
+                </div>
+              </div>
+              <div class="post-footer">
+                <span style="font:600 11px var(--mono);color:#67e87a">✓ Acesso Liberado</span>
+                <button class="btn-action btn-sm" onclick="window.viewClaimedAccountCredentials('${a.id}')">🔑 Ver Minhas Credenciais</button>
+                ${isAdmin ? `<button class="btn-out btn-sm" onclick="window.resetDiscordClaim('${a.id}')">🔄 Resetar</button>` : ''}
+              </div>
+            </article>
+          `;
+        }
+
+        // 2. Conta disponível para resgate (Reward não reivindicado)
+        if (a.isReward && !a.claimed) {
+          return `
+            <article class="post-card" style="border-color:var(--accent);background:rgba(255,42,58,0.04)">
+              <div>
+                <div class="post-top">
+                  <span class="badge" style="background:#541c24;color:#ff9e9e;border:1px solid #8e2b34;font-weight:700">🎁 REWARD DISPONÍVEL</span>
+                  <span class="post-date" style="color:var(--accent-2);font-weight:700">${esc(a.email || 'Discord')}</span>
+                </div>
+                <h3 class="post-title" style="color:#fff">${esc(a.title || a.email || 'Conta Discord')}</h3>
+                <p style="color:#d8c4c5;font-size:14px;margin:0 0 10px">${esc(a.description || 'Recompensa adicionada pela organização.')}</p>
+                <div style="margin-bottom:12px;padding:8px 10px;background:rgba(255,42,58,0.08);border-left:3px solid var(--accent);border-radius:4px;font-size:12px;color:#fca5a5">
+                  <b>Recompensa Aberta:</b> Ao reivindicar, as credenciais serão reveladas para você e a conta sumirá do painel para outros membros.
+                </div>
+              </div>
+              <div class="post-footer">
+                <span style="font:600 11px var(--mono);color:var(--accent-2)">✨ 1 Unidade Aberta</span>
+                <button class="btn-action btn-sm" onclick="window.claimRewardAccount('${a.id}', this)">🎁 Reivindicar Conta</button>
+                ${isAdmin ? `
+                  <button class="btn-out btn-sm" onclick="window.revealSecret('${a.id}')">Cofre</button>
+                  <button class="btn-out btn-sm" onclick="window.editDiscord('${a.id}')">Editar</button>
+                  <button class="btn-out btn-sm" style="color:var(--accent)" onclick="window.deleteDiscord('${a.id}')">Excluir</button>
+                ` : ''}
+              </div>
+            </article>
+          `;
+        }
+
+        // 3. Conta já reivindicada (visível no painel geral apenas para Administradores quando isAdmin=true)
+        if (a.claimed && isAdmin) {
+          return `
+            <article class="post-card" style="opacity:0.75;border-color:var(--line)">
+              <div>
+                <div class="post-top">
+                  <span class="badge" style="background:#4a1e1e;color:#ff9b9b">🏆 Resgatada por @${esc(a.claimedBy || 'membro')}</span>
+                  <span class="post-date" style="color:var(--mute)">${esc(a.claimedAt ? a.claimedAt.substring(0, 10) : 'Resgatada')}</span>
+                </div>
+                <h3 class="post-title" style="color:#fff">${esc(a.title || a.email || 'Conta Discord')}</h3>
+                <p style="color:var(--mute);font-size:14px;margin:0 0 12px">Reivindicada por <b>${esc(a.claimedByName || a.claimedBy)}</b>. Oculta para membros comuns.</p>
+              </div>
+              <div class="post-footer">
+                <span style="font:600 11px var(--mono);color:var(--dim)">🔒 Oculta p/ Membros</span>
+                <button class="btn-secondary btn-sm" onclick="window.resetDiscordClaim('${a.id}')">🔄 Liberar Novamente</button>
+                <button class="btn-out btn-sm" onclick="window.revealSecret('${a.id}')">Cofre</button>
+                <button class="btn-danger btn-sm" onclick="window.confirmDeleteDiscord('${a.id}')">Excluir</button>
+              </div>
+            </article>
+          `;
+        }
+
+        // 4. Conta institucional padrão / Bot oficial
+        return `
+          <article class="post-card">
+            <div>
+              <div class="post-top">
+                <span class="badge ${a.status === 'Ativo' ? 'badge-in' : 'badge-status'}">● ${esc(a.status)}</span>
+                <span class="post-date" style="color:var(--accent-2);font-weight:700">${esc(a.email || 'Oficial')}</span>
+              </div>
+              <h3 class="post-title">${esc(a.title || a.email || 'Conta Discord')}</h3>
+              <p style="color:#d8c4c5;font-size:14px;margin:0 0 12px">${esc(a.description || 'Conta protegida')}</p>
+            </div>
+            <div class="post-footer">
+              <span style="font:600 11px var(--mono);color:var(--green)">🔒 Credenciais Protegidas</span>
+              ${isAdmin && a.hasCredentials ? `<button class="btn-out btn-sm" onclick="window.revealSecret('${a.id}')">Visualizar</button>` : ''}
+              ${isAdmin ? `
+                <button class="btn-out btn-sm" onclick="window.editDiscord('${a.id}')">Editar</button>
+                <button class="btn-out btn-sm" style="color:var(--accent)" onclick="window.deleteDiscord('${a.id}')">Excluir</button>
+              ` : ''}
+            </div>
+          </article>
+        `;
+      }).join('');
+    } catch (e) {
+      container.innerHTML = '<p style="color:var(--accent);text-align:center;grid-column:1/-1">Erro ao carregar contas Discord.</p>';
+    }
+  }
+  $('newDiscordAccountBtn').addEventListener('click', () => {
+    goTo('tab-operations');
+    switchOpPane('oppane-discord');
+    $('discEmail').focus();
+  });
+
+  /* ---------- 8. PÁGINA CENTRAL DE LINKS (4 APLICATIVOS) ---------- */
+  async function loadCentralLinks() {
+    const container = $('centralLinksContainer');
+    try {
+      const res = await fetch('/api/public/links');
+      const data = await res.json();
+      if (!data.success) return;
+      const links = data.links;
+
+      const appKeys = ['root', 'discord', 'telegram', 'tiktok'];
+      container.innerHTML = appKeys.map(k => {
+        const item = links[k] || { name: k.toUpperCase(), url: '', description: '', isAvailable: false };
+        const iconSymbol = k === 'root' ? 'i-terminal' : (k === 'discord' ? 'i-discord' : (k === 'telegram' ? 'i-telegram' : 'i-tiktok'));
+        const isOk = Boolean(item.url && item.url.trim());
+
+        return `
+          <div class="app-link-card">
+            <div>
+              <div class="app-icon-wrap" style="color:var(--accent)">
+                <svg><use href="#${iconSymbol}"/></svg>
+              </div>
+              <span class="app-status-badge ${isOk ? 'app-status-online' : 'app-status-offline'}">
+                ${isOk ? '● Disponível' : '○ Indisponível'}
+              </span>
+              <h3>${esc(item.name)}</h3>
+              <p>${esc(item.description || 'Destino oficial da comunidade NZI.')}</p>
+            </div>
+            <div>
+              ${isOk ? `
+                <a class="app-btn" href="${esc(item.url)}" target="_blank" rel="noopener noreferrer">
+                  Acessar Link ↗
+                </a>
+              ` : `
+                <button class="app-btn disabled" disabled title="Link não configurado no painel administrativo">
+                  Link indisponível no momento
+                </button>
+              `}
+            </div>
+          </div>
+        `;
+      }).join('');
+    } catch (e) {
+      container.innerHTML = '<p style="color:var(--accent);text-align:center;grid-column:1/-1">Erro ao carregar Central de Links.</p>';
+    }
+  }
+  $('editLinksBtn').addEventListener('click', () => {
+    goTo('tab-operations');
+    switchOpPane('oppane-links');
+  });
+
+  /* ---------- 9. PÁGINA EVENTOS & TEMPORIZADOR REGRESSIVO ---------- */
+  let eventTimerInterval = null;
+  let activeEventFilter = 'Todos';
+
+  async function loadPublicEvents() {
+    const grid = $('publicEventsGrid');
+    try {
+      const q = $('publicEventSearch').value.trim();
+      const res = await fetch(`/api/public/events?status=${encodeURIComponent(activeEventFilter)}&search=${encodeURIComponent(q)}`);
+      const data = await res.json();
+      if (!data.success) return;
+      allEvents = data.events;
+
+      if (!allEvents.length) {
+        grid.innerHTML = '';
+        $('publicEventEmpty').style.display = 'block';
+        return;
+      }
+      $('publicEventEmpty').style.display = 'none';
+      grid.innerHTML = allEvents.map(e => renderEventCardHTML(e)).join('');
+      updateCountdowns();
+    } catch (e) {
+      grid.innerHTML = '<p style="color:var(--accent);text-align:center;grid-column:1/-1">Erro ao carregar eventos.</p>';
+    }
+  }
+
+  function renderEventCardHTML(e) {
+    const statusClass = e.status === 'Confirmado' ? 'badge-in' : (e.status === 'Em andamento' ? 'badge-out' : (e.status === 'Finalizado' ? 'badge-off' : 'badge-status'));
+    return `
+      <article class="card event-card" data-event-id="${e.id}" data-event-date="${esc(e.eventDate)}">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+          <span class="badge ${statusClass}">● ${esc(e.status)}</span>
+          <span style="font:500 12px var(--mono);color:var(--mute)">${esc(e.startTime || '')} ${e.endTime ? 'às ' + esc(e.endTime) : ''}</span>
+        </div>
+        <h3 style="font:800 26px/1.1 var(--display);text-transform:uppercase;margin:0 0 8px;color:#fff">${esc(e.title)}</h3>
+        <p style="margin:0 0 12px;color:#d8c4c5;font-size:14px">${esc(e.description)}</p>
+        
+        <!-- Temporizador regressivo dinâmico -->
+        <div class="countdown-box">
+          <div class="countdown-title">
+            <svg width="14" height="14" style="stroke:currentColor;fill:none;stroke-width:2"><use href="#i-cal"/></svg>
+            Temporizador Regressivo:
+          </div>
+          <div class="countdown-units" id="cd_${e.id}">
+            <span class="cd-unit"><span class="cd-num" id="cd_d_${e.id}">--</span><span class="cd-txt">d</span></span>
+            <span class="cd-unit"><span class="cd-num" id="cd_h_${e.id}">--</span><span class="cd-txt">horas</span></span>
+            <span class="cd-unit"><span class="cd-num" id="cd_m_${e.id}">--</span><span class="cd-txt">minutos</span></span>
+            <span class="cd-unit"><span class="cd-num" id="cd_s_${e.id}">--</span><span class="cd-txt">segundos</span></span>
+          </div>
+        </div>
+
+        <div class="event-meta">
+          <span>Fuso: ${esc(e.timezone || 'GMT-3')}</span>
+          <span>Atualizado: ${esc(e.updatedAt || e.createdAt)}</span>
+        </div>
+      </article>
+    `;
+  }
+
+  function startCountdownLoop() {
+    if (eventTimerInterval) clearInterval(eventTimerInterval);
+    eventTimerInterval = setInterval(updateCountdowns, 1000);
+  }
+
+  function updateCountdowns() {
+    const now = Date.now();
+    document.querySelectorAll('[data-event-date]').forEach(card => {
+      const eid = card.dataset.eventId;
+      const targetStr = card.dataset.eventDate;
+      const target = new Date(targetStr).getTime();
+      const wrap = $(`cd_${eid}`);
+      if (!wrap || isNaN(target)) return;
+
+      const diff = target - now;
+      if (diff <= 0) {
+        wrap.innerHTML = '<span class="countdown-expired">● Horário alcançado / Em andamento</span>';
+        return;
+      }
+
+      const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+      const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+      const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+      const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+
+      const pad = n => String(n).padStart(2, '0');
+      wrap.innerHTML = `
+        ${days > 0 ? `<span class="cd-unit"><span class="cd-num">${pad(days)}</span><span class="cd-txt">dias</span></span>` : ''}
+        <span class="cd-unit"><span class="cd-num">${pad(hours)}</span><span class="cd-txt">horas</span></span>
+        <span class="cd-unit"><span class="cd-num">${pad(minutes)}</span><span class="cd-txt">minutos</span></span>
+        <span class="cd-unit"><span class="cd-num">${pad(seconds)}</span><span class="cd-txt">segundos</span></span>
+      `;
+    });
+  }
+
+  document.querySelectorAll('[data-event-filter]').forEach(b => {
+    b.addEventListener('click', () => {
+      activeEventFilter = b.dataset.eventFilter;
+      document.querySelectorAll('[data-event-filter]').forEach(x => x.classList.toggle('active', x === b));
+      loadPublicEvents();
+    });
+  });
+  $('publicEventSearch').addEventListener('input', loadPublicEvents);
+  $('newEventBtn').addEventListener('click', () => {
+    goTo('tab-operations');
+    switchOpPane('oppane-events');
+    $('eventTitle').focus();
+  });
+
+  /* ---------- 10. PAINEL DE OPERAÇÕES (ADMIN) ---------- */
+  function checkOperationsAccess() {
+    if (isAdmin) {
+      $('opLockScreen').style.display = 'none';
+      $('opAdminContent').style.display = 'block';
+      loadAdminPosts();
+    } else {
+      $('opLockScreen').style.display = 'block';
+      $('opAdminContent').style.display = 'none';
+    }
+  }
+
+  /* ---------- HWID: Fingerprint do Dispositivo ---------- */
+  function generateHwid() {
+    const nav = window.navigator;
+    const screen = window.screen;
+    const parts = [
+      nav.userAgent,
+      nav.language,
+      screen.colorDepth,
+      screen.width + 'x' + screen.height,
+      screen.availWidth + 'x' + screen.availHeight,
+      new Date().getTimezoneOffset(),
+      nav.hardwareConcurrency || 0,
+      nav.platform || ''
+    ];
+    const raw = parts.join('|');
+    // Hash simples djb2 para gerar fingerprint
+    let hash = 5381;
+    for (let i = 0; i < raw.length; i++) {
+      hash = ((hash << 5) + hash) + raw.charCodeAt(i);
+      hash = hash & hash; // converte para 32bit int
+    }
+    return 'hwid_' + Math.abs(hash).toString(16).padStart(8, '0') + '_' + (nav.hardwareConcurrency || 0) + 'c_' + screen.width + 'x' + screen.height;
+  }
+
+  const DEVICE_HWID = generateHwid();
+
+  $('opLoginForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const username = $('opUsername').value.trim();
+    const password = $('opPassword').value.trim();
+    const pin = $('opPin').value.trim();
+
+    try {
+      const res = await apiFetch('/api/auth/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ username, password, pin, otp: pin, hwid: DEVICE_HWID })
+      });
+      const data = await res.json();
+      if (!res.ok || !data.success) {
+        return showAlert(data.error || "Falha na autenticação administrativa.", 'error');
+      }
+      if (data.token) {
+        try { localStorage.setItem('nzi_token', data.token); } catch (e) {}
+      }
+      currentUser = data.member;
+      isAdmin = Boolean(data.member.isAdmin);
+      showAlert("Autenticação realizada com sucesso! Painel de Operações liberado.");
+      renderUserProfile();
+      checkOperationsAccess();
+      loadDiscordAccounts();
+      loadDashboardStats();
+    } catch (err) {
+      showAlert("Erro de conexão com o servidor ao autenticar.", 'error');
+    }
+  });
+
+  /* ---------- OPERAÇÕES: GERENCIAR PUBLICAÇÕES ---------- */
+  async function loadAdminPosts() {
+    const tbody = $('adminPostsTableBody');
+    try {
+      const cat = $('filterPostCategory').value;
+      const q = $('adminPostSearch').value.trim();
+      const res = await fetch(`/api/admin/posts?category=${encodeURIComponent(cat)}&search=${encodeURIComponent(q)}`);
+      const data = await res.json();
+      if (!data.success) {
+        tbody.innerHTML = `<tr><td colspan="6" style="color:var(--accent);text-align:center">${esc(data.error)}</td></tr>`;
+        return;
+      }
+      allPosts = data.posts;
+      if (!allPosts.length) {
+        tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;color:var(--mute)">Nenhuma publicação encontrada.</td></tr>';
+        return;
+      }
+      tbody.innerHTML = allPosts.map(p => `
+        <tr>
+          <td><span class="post-category-badge" style="font-size:10px">${esc(p.category)}</span></td>
+          <td><b style="color:#fff">${esc(p.title)}</b></td>
+          <td><span class="badge ${p.status === 'Publicado' ? 'badge-in' : (p.status === 'Rascunho' ? 'badge-status' : 'badge-out')}">${esc(p.status)}</span></td>
+          <td style="font:500 12px var(--mono);color:var(--mute)">${esc(p.publishedAt || p.createdAt)}</td>
+          <td style="color:var(--mute)">${esc(p.author)}</td>
+          <td style="text-align:right;white-space:nowrap">
+            <button class="btn-secondary btn-sm" onclick="window.editPost('${p.id}')">Editar</button>
+            <button class="btn-out btn-sm" onclick="window.togglePublishPost('${p.id}')">${p.status === 'Publicado' ? 'Despublicar' : 'Publicar'}</button>
+            <button class="btn-danger btn-sm" onclick="window.confirmDeletePost('${p.id}')">Excluir</button>
+          </td>
+        </tr>
+      `).join('');
+    } catch (e) {
+      tbody.innerHTML = '<tr><td colspan="6" style="color:var(--accent);text-align:center">Erro ao carregar publicações.</td></tr>';
+    }
+  }
+  $('filterPostCategory').addEventListener('change', loadAdminPosts);
+  $('adminPostSearch').addEventListener('input', loadAdminPosts);
+
+  // Criar / Editar Publicação
+  $('postForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const id = $('editPostId').value;
+    const payload = {
+      category: $('postCategory').value,
+      title: $('postTitle').value.trim(),
+      description: $('postDesc').value.trim(),
+      image: $('postImage').value.trim(),
+      link: $('postLink').value.trim(),
+      status: $('postStatus').value
+    };
+
+    try {
+      const url = id ? `/api/admin/posts/${id}` : '/api/admin/posts';
+      const method = id ? 'PUT' : 'POST';
+      const res = await fetch(url, {
+        method,
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+      const data = await res.json();
+      if (!res.ok || !data.success) {
+        return showAlert(data.error || "Erro ao salvar publicação.", 'error');
+      }
+      showAlert(data.message);
+      resetPostForm();
+      loadAdminPosts();
+      loadDashboardStats();
+      loadPainelPosts();
+    } catch (err) {
+      showAlert("Erro de conexão ao salvar publicação.", 'error');
+    }
+  });
+
+  window.editPost = function (id) {
+    const post = allPosts.find(p => p.id === id);
+    if (!post) return;
+    $('editPostId').value = post.id;
+    $('postCategory').value = post.category;
+    $('postTitle').value = post.title;
+    $('postDesc').value = post.description;
+    $('postImage').value = post.image || '';
+    $('postLink').value = post.link || '';
+    $('postStatus').value = post.status;
+    $('postFormTitle').innerHTML = '<span class="l"><svg><use href="#i-edit"/></svg>Editar Publicação</span>';
+    $('cancelPostEditBtn').style.display = 'inline-block';
+    window.scrollTo({ top: $('postForm').offsetTop - 20, behavior: 'smooth' });
+  };
+
+  $('cancelPostEditBtn').addEventListener('click', resetPostForm);
+  function resetPostForm() {
+    $('postForm').reset();
+    $('editPostId').value = '';
+    $('postFormTitle').innerHTML = '<span class="l"><svg><use href="#i-edit"/></svg>Criar Nova Publicação</span>';
+    $('cancelPostEditBtn').style.display = 'none';
+  }
+
+  window.togglePublishPost = async function (id) {
+    try {
+      const res = await fetch(`/api/admin/posts/${id}/publish`, { method: 'PATCH' });
+      const data = await res.json();
+      if (!res.ok || !data.success) return showAlert(data.error || "Erro ao alternar status.", 'error');
+      showAlert(data.message);
+      loadAdminPosts();
+      loadDashboardStats();
+      loadPainelPosts();
+    } catch (err) {
+      showAlert("Erro de conexão ao alterar status.", 'error');
+    }
+  };
+
+  window.confirmDeletePost = function (id) {
+    const post = allPosts.find(p => p.id === id);
+    const title = post ? post.title : 'esta publicação';
+    $('confirmModalText').textContent = `Tem certeza que deseja excluir a publicação "${title}"? Esta ação removerá o conteúdo permanentemente do sistema.`;
+    pendingDeleteAction = async () => {
+      try {
+        const res = await fetch(`/api/admin/posts/${id}`, { method: 'DELETE' });
+        const data = await res.json();
+        if (!res.ok || !data.success) return showAlert(data.error || "Erro ao excluir.", 'error');
+        showAlert(data.message);
+        loadAdminPosts();
+        loadDashboardStats();
+          loadPainelPosts();
+      } catch (err) {
+        showAlert("Erro de conexão ao excluir publicação.", 'error');
+      }
+    };
+    openModal('confirmModal');
+  };
+
+  // Botão Prévia
+  $('previewPostBtn').addEventListener('click', () => {
+    const cat = $('postCategory').value;
+    const title = $('postTitle').value.trim();
+    const desc = $('postDesc').value.trim();
+    const img = $('postImage').value.trim();
+    const link = $('postLink').value.trim();
+
+    if (!title || !desc) {
+      return showAlert("Preencha ao menos o título e a descrição para visualizar a prévia.", 'error');
+    }
+
+    $('prevBadge').textContent = cat;
+    $('prevDate').textContent = new Date().toISOString().replace('T', ' ').substring(0, 16);
+    $('prevTitle').textContent = title;
+    $('prevBody').innerHTML = renderFormattedText(desc);
+
+    if (img) {
+      $('prevImage').src = img;
+      $('prevImageWrap').style.display = 'block';
+    } else {
+      $('prevImageWrap').style.display = 'none';
+    }
+
+    if (link) {
+      $('prevLinkBtn').href = link;
+      $('prevLinkWrap').style.display = 'block';
+    } else {
+      $('prevLinkWrap').style.display = 'none';
+    }
+
+    openModal('previewModal');
+  });
+
+  $('confirmPublishFromPrevBtn').addEventListener('click', () => {
+    closeModal('previewModal');
+    $('postForm').dispatchEvent(new Event('submit'));
+  });
+
+  /* ---------- OPERAÇÕES: CENTRAL DE LINKS ---------- */
+  async function loadAdminLinks() {
+    const grid = $('adminLinksFormsGrid');
+    try {
+      const res = await fetch('/api/admin/links');
+      const data = await res.json();
+      if (!data.success) return;
+      const links = data.links;
+
+      const appKeys = ['root', 'discord', 'telegram', 'tiktok'];
+      grid.innerHTML = appKeys.map(k => {
+        const app = links[k] || { name: k.toUpperCase(), url: '', description: '' };
+        return `
+          <div class="card" style="padding:16px;background:rgba(0,0,0,.4)">
+            <h4 style="margin:0 0 10px;font:800 20px var(--display);text-transform:uppercase;color:var(--accent-2)">${esc(app.name)}</h4>
+            <div class="field" style="margin-bottom:10px">
+              <label>URL de Acesso (Protocolo Seguro HTTPS obrigatório)</label>
+              <input type="url" id="link_url_${k}" value="${esc(app.url)}" placeholder="https://...">
+            </div>
+            <div class="field" style="margin-bottom:12px">
+              <label>Descrição do Aplicativo</label>
+              <input type="text" id="link_desc_${k}" value="${esc(app.description)}" placeholder="Descrição opcional">
+            </div>
+            <button class="btn-action btn-sm" onclick="window.saveLink('${k}')">Salvar ${esc(app.name)}</button>
+          </div>
+        `;
+      }).join('');
+    } catch (e) {
+      grid.innerHTML = '<p style="color:var(--accent)">Erro ao carregar links administrativos.</p>';
+    }
+  }
+
+  window.saveLink = async function (appKey) {
+    const url = $(`link_url_${appKey}`).value.trim();
+    const desc = $(`link_desc_${appKey}`).value.trim();
+
+    try {
+      const res = await fetch(`/api/admin/links/${appKey}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ url, description: desc })
+      });
+      const data = await res.json();
+      if (!res.ok || !data.success) return showAlert(data.error || "Erro ao salvar link.", 'error');
+      showAlert(data.message);
+      loadCentralLinks();
+      loadDashboardStats();
+    } catch (err) {
+      showAlert("Erro de conexão ao salvar link.", 'error');
+    }
+  };
+
+  /* ---------- OPERAÇÕES: GERENCIAR EVENTOS ---------- */
+  async function loadAdminEvents() {
+    const tbody = $('adminEventsTableBody');
+    try {
+      const res = await fetch('/api/admin/events');
+      const data = await res.json();
+      if (!data.success) return;
+      const events = data.events;
+      if (!events.length) {
+        tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;color:var(--mute)">Nenhum evento registrado.</td></tr>';
+        return;
+      }
+      tbody.innerHTML = events.map(e => `
+        <tr>
+          <td><b style="color:#fff">${esc(e.title)}</b></td>
+          <td style="font:500 12px var(--mono);color:var(--mute)">${esc(e.eventDate.replace('T', ' '))}</td>
+          <td>
+            <select style="width:auto;padding:3px 8px;font-size:12px" onchange="window.changeEventStatus('${e.id}', this.value)">
+              <option value="Confirmado" ${e.status === 'Confirmado' ? 'selected' : ''}>Confirmado</option>
+              <option value="Agendado" ${e.status === 'Agendado' ? 'selected' : ''}>Agendado</option>
+              <option value="Em andamento" ${e.status === 'Em andamento' ? 'selected' : ''}>Em andamento</option>
+              <option value="Finalizado" ${e.status === 'Finalizado' ? 'selected' : ''}>Finalizado</option>
+              <option value="Cancelado" ${e.status === 'Cancelado' ? 'selected' : ''}>Cancelado</option>
+            </select>
+          </td>
+          <td style="font:700 13px var(--mono);color:var(--accent-2)" data-event-date="${esc(e.eventDate)}" data-event-id="${e.id}">
+            <span id="cd_${e.id}">Ativo</span>
+          </td>
+          <td><span class="badge ${e.published ? 'badge-in' : 'badge-out'}">${e.published ? 'Sim' : 'Não'}</span></td>
+          <td style="text-align:right;white-space:nowrap">
+            <button class="btn-secondary btn-sm" onclick="window.editEvent('${e.id}')">Editar</button>
+            <button class="btn-out btn-sm" onclick="window.togglePublishEvent('${e.id}')">${e.published ? 'Despublicar' : 'Publicar'}</button>
+            <button class="btn-danger btn-sm" onclick="window.confirmDeleteEvent('${e.id}')">Excluir</button>
+          </td>
+        </tr>
+      `).join('');
+      updateCountdowns();
+    } catch (e) {
+      tbody.innerHTML = '<tr><td colspan="6" style="color:var(--accent);text-align:center">Erro ao carregar eventos.</td></tr>';
+    }
+  }
+
+  // Criar / Editar Evento
+  $('eventForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const id = $('editEventId').value;
+    const payload = {
+      title: $('eventTitle').value.trim(),
+      description: $('eventDesc').value.trim(),
+      eventDate: $('eventDateTime').value,
+      endTime: $('eventEndTime').value.trim(),
+      timezone: $('eventTimezone').value.trim(),
+      status: $('eventStatus').value,
+      published: $('eventPublished').checked
+    };
+
+    try {
+      const url = id ? `/api/admin/events/${id}` : '/api/admin/events';
+      const method = id ? 'PUT' : 'POST';
+      const res = await fetch(url, {
+        method,
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+      const data = await res.json();
+      if (!res.ok || !data.success) return showAlert(data.error || "Erro ao salvar evento.", 'error');
+      showAlert(data.message);
+      resetEventForm();
+      loadAdminEvents();
+      loadPublicEvents();
+      loadDashboardStats();
+    } catch (err) {
+      showAlert("Erro de conexão ao salvar evento.", 'error');
+    }
+  });
+
+  window.editEvent = async function (id) {
+    const res = await fetch('/api/admin/events');
+    const data = await res.json();
+    const ev = (data.events || []).find(x => x.id === id);
+    if (!ev) return;
+    $('editEventId').value = ev.id;
+    $('eventTitle').value = ev.title;
+    $('eventDesc').value = ev.description || '';
+    $('eventDateTime').value = ev.eventDate;
+    $('eventEndTime').value = ev.endTime || '';
+    $('eventTimezone').value = ev.timezone || 'America/Sao_Paulo (GMT-3)';
+    $('eventStatus').value = ev.status;
+    $('eventPublished').checked = ev.published !== false;
+    $('eventFormTitle').innerHTML = '<span class="l"><svg><use href="#i-edit"/></svg>Editar Evento</span>';
+    $('cancelEventEditBtn').style.display = 'inline-block';
+    window.scrollTo({ top: $('eventForm').offsetTop - 20, behavior: 'smooth' });
+  };
+
+  $('cancelEventEditBtn').addEventListener('click', resetEventForm);
+  function resetEventForm() {
+    $('eventForm').reset();
+    $('editEventId').value = '';
+    $('eventTimezone').value = 'America/Sao_Paulo (GMT-3)';
+    $('eventPublished').checked = true;
+    $('eventFormTitle').innerHTML = '<span class="l"><svg><use href="#i-cal"/></svg>Cadastrar / Agendar Evento</span>';
+    $('cancelEventEditBtn').style.display = 'none';
+  }
+
+  window.changeEventStatus = async function (id, status) {
+    try {
+      const res = await fetch(`/api/admin/events/${id}/status`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ status })
+      });
+      const data = await res.json();
+      if (!res.ok || !data.success) return showAlert(data.error || "Erro ao alterar status.", 'error');
+      showAlert(data.message);
+      loadAdminEvents();
+      loadPublicEvents();
+      loadDashboardStats();
+    } catch (err) {
+      showAlert("Erro de conexão ao alterar status do evento.", 'error');
+    }
+  };
+
+  window.togglePublishEvent = async function (id) {
+    try {
+      const res = await fetch(`/api/admin/events/${id}/publish`, { method: 'PATCH' });
+      const data = await res.json();
+      if (!res.ok || !data.success) return showAlert(data.error || "Erro ao alterar visibilidade.", 'error');
+      showAlert(data.message);
+      loadAdminEvents();
+      loadPublicEvents();
+      loadDashboardStats();
+    } catch (err) {
+      showAlert("Erro ao alternar visibilidade do evento.", 'error');
+    }
+  };
+
+  window.confirmDeleteEvent = function (id) {
+    $('confirmModalText').textContent = "Tem certeza que deseja excluir este evento? Esta ação removerá o temporizador e os dados permanentemente.";
+    pendingDeleteAction = async () => {
+      try {
+        const res = await fetch(`/api/admin/events/${id}`, { method: 'DELETE' });
+        const data = await res.json();
+        if (!res.ok || !data.success) return showAlert(data.error || "Erro ao excluir.", 'error');
+        showAlert(data.message);
+        loadAdminEvents();
+        loadPublicEvents();
+        loadDashboardStats();
+      } catch (err) {
+        showAlert("Erro de conexão ao excluir evento.", 'error');
+      }
+    };
+    openModal('confirmModal');
+  };
+
+  /* ---------- OPERAÇÕES: CONTAS DISCORD & COFRE ---------- */
+  async function loadAdminDiscord() {
+    const tbody = $('adminDiscordTableBody');
+    try {
+      const res = await apiFetch('/api/admin/discord');
+      const data = await res.json();
+      if (!data.success) return;
+      const accounts = data.accounts;
+      if (!accounts.length) {
+        tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;color:var(--mute)">Nenhuma conta Discord cadastrada.</td></tr>';
+        return;
+      }
+      tbody.innerHTML = accounts.map(a => `
+        <tr>
+          <td><b style="color:#fff">${esc(a.title)}</b><br><small style="color:var(--mute)">${esc(a.email || a.botTag || 'N/A')}</small></td>
+          <td><span class="badge ${a.status === 'Ativo' ? 'badge-in' : 'badge-status'}">${esc(a.status)}</span></td>
+          <td>
+            ${a.claimed ? `
+              <span class="badge" style="background:#5a2323;color:#ff9e9e" title="Resgatada em ${esc(a.claimedAt)} por ${esc(a.claimedByName || a.claimedBy)}">
+                🏆 Reivindicada (@${esc(a.claimedBy)})
+              </span>
+            ` : (a.isReward ? `
+              <span class="badge badge-in">🎁 Aberto p/ Resgate</span>
+            ` : `
+              <span class="badge badge-status">Institucional</span>
+            `)}
+          </td>
+          <td><span class="badge ${a.isPublicDisclosed ? 'badge-in' : 'badge-out'}">${a.isPublicDisclosed ? 'Sim' : 'Não'}</span></td>
+          <td><span style="font:600 11px var(--mono);color:${a.hasCredentials ? 'var(--green)' : 'var(--dim)'}">${a.hasCredentials ? '● Criptografado' : '○ Sem credencial'}</span></td>
+          <td style="text-align:right;white-space:nowrap">
+            ${a.claimed ? `<button class="btn-secondary btn-sm" onclick="window.resetDiscordClaim('${a.id}')" title="Liberar recompensa novamente">🔄 Liberar</button>` : ''}
+            ${a.hasCredentials ? `<button class="btn-out btn-sm" onclick="window.revealSecret('${a.id}')">Revelar Segredo</button>` : ''}
+            <button class="btn-danger btn-sm" onclick="window.confirmDeleteDiscord('${a.id}')">Excluir</button>
+          </td>
+        </tr>
+      `).join('');
+    } catch (e) {
+      tbody.innerHTML = '<tr><td colspan="6" style="color:var(--accent);text-align:center">Erro ao carregar contas Discord.</td></tr>';
+    }
+  }
+
+  $('discordAccountForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const payload = {
+      title: $('discTitle').value.trim(),
+      email: $('discEmail').value.trim(),
+      senha: $('discSenha').value.trim(),
+      token: $('discToken').value.trim(),
+      status: $('discStatus').value,
+      description: $('discDesc').value.trim(),
+      isPublicDisclosed: $('discIsPublic').checked,
+      isReward: $('discIsReward') ? $('discIsReward').checked : true
+    };
+    try {
+      const res = await apiFetch('/api/admin/discord', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+      const data = await res.json();
+      if (!res.ok || !data.success) return showAlert(data.error || "Erro ao salvar conta.", 'error');
+      showAlert(data.message);
+      $('discordAccountForm').reset();
+      $('discIsPublic').checked = true;
+      if ($('discIsReward')) $('discIsReward').checked = true;
+      loadAdminDiscord();
+      loadDiscordAccounts();
+      loadDashboardStats();
+    } catch (err) {
+      showAlert("Erro ao cadastrar conta Discord.", 'error');
+    }
+  });
+
+  // ========== Painel Admin ==========
+  async function loadAdminPainel() {
+    const tbody = $('adminPainelTableBody');
+    if (!tbody) return;
+    try {
+      const res = await apiFetch('/api/admin/painel');
+      const data = await res.json();
+      if (!data.success) return;
+      if (!data.accounts.length) {
+        tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;color:var(--mute)">Nenhum Painel cadastrado.</td></tr>';
+        return;
+      }
+      tbody.innerHTML = data.accounts.map(a => `
+        <tr>
+          <td><b style="color:#fff">${esc(a.label || a.user)}</b><br><small style="color:var(--mute)">${esc(a.user)}</small></td>
+          <td>${esc(a.tipoLogin)}</td>
+          <td><span class="badge ${a.status === 'Ativo' ? 'badge-in' : 'badge-status'}">${esc(a.status)}</span></td>
+          <td><span style="font:600 11px var(--mono);color:var(--green)">● Criptografado</span></td>
+          <td style="text-align:right;white-space:nowrap">
+            <button class="btn-out btn-sm" onclick="window.revealPainel('${a.id}')">Revelar</button>
+            <button class="btn-danger btn-sm" onclick="window.deletePainel('${a.id}')">Excluir</button>
+          </td>
+        </tr>
+      `).join('');
+    } catch (e) {
+      tbody.innerHTML = '<tr><td colspan="5" style="color:var(--accent);text-align:center">Erro.</td></tr>';
+    }
+  }
+
+  if ($('painelAccountForm')) {
+    $('painelAccountForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const payload = {
+        user: $('painelUser').value.trim(),
+        senha: $('painelSenha').value.trim(),
+        tipoLogin: $('painelTipo').value,
+        label: $('painelLabel').value.trim(),
+        status: $('painelStatus').value,
+        description: $('painelDesc').value.trim()
+      };
+      try {
+        const res = await apiFetch('/api/admin/painel', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
+        const data = await res.json();
+        if (!res.ok || !data.success) return showAlert(data.error || 'Erro ao salvar Painel.', 'error');
+        showAlert(data.message);
+        $('painelAccountForm').reset();
+        loadAdminPainel();
+        loadPainelPosts();
+        loadDashboardStats();
+      } catch (err) { showAlert('Erro de conexão.', 'error'); }
+    });
+  }
+
+  window.revealPainel = function(id) {
+    $('revealAccountId').value = id;
+    $('revealAccountId').dataset.type = 'painel';
+    $('revealPinInput').value = '';
+    $('revealStepAuth').style.display = 'block';
+    $('revealStepResult').style.display = 'none';
+    openModal('revealModal');
+  };
+  window.deletePainel = async function(id) {
+    if (!confirm('Excluir este Painel permanentemente?')) return;
+    try {
+      const res = await apiFetch(`/api/admin/painel/${id}`, { method: 'DELETE' });
+      const data = await res.json();
+      if (data.success) { showAlert(data.message); loadAdminPainel(); loadPainelPosts(); }
+      else showAlert(data.error || 'Erro', 'error');
+    } catch (e) { showAlert('Erro ao excluir.', 'error'); }
+  };
+
+  window.confirmDeleteDiscord = function (id) {
+    $('confirmModalText').textContent = "Tem certeza que deseja excluir esta conta Discord e suas credenciais criptografadas?";
+    pendingDeleteAction = async () => {
+      try {
+        const res = await apiFetch(`/api/admin/discord/${id}`, { method: 'DELETE' });
+        const data = await res.json();
+        if (!res.ok || !data.success) return showAlert(data.error || "Erro ao excluir conta.", 'error');
+        showAlert(data.message);
+        loadAdminDiscord();
+        loadDiscordAccounts();
+        loadDashboardStats();
+      } catch (err) {
+        showAlert("Erro ao excluir conta Discord.", 'error');
+      }
+    };
+    openModal('confirmModal');
+  };
+
+  /* ---------- SISTEMA DE REWARDS DISCORD ---------- */
+  let pendingClaimId = null;
+  window.claimRewardAccount = async function (id, btnEl) {
+    if (!currentUser) {
+      showAlert("Faça login para reivindicar esta recompensa!", 'error');
+      location.hash = '#tab-operations';
+      return;
+    }
+
+    const acc = discordAccountsMap[id];
+    const name = acc ? (acc.title || acc.email) : 'Conta Discord';
+
+    if (!confirm(`Deseja resgatar a recompensa "${name}" agora?\n\nAs credenciais serão reveladas imediatamente na sua tela e esta conta sumirá do painel para outros membros.`)) {
+      return;
+    }
+
+    if (btnEl) {
+      btnEl.disabled = true;
+      btnEl.textContent = '⏳ Resgatando...';
+    }
+
+    showAlert(`Processando resgate de "${name}" no servidor...`, 'neutral');
+
+    try {
+      const res = await apiFetch(`/api/discord/${id}/claim`, {
+        method: 'POST'
+      });
+      const data = await res.json();
+      if (!res.ok || !data.success) {
+        if (btnEl) {
+          btnEl.disabled = false;
+          btnEl.textContent = '🎁 Reivindicar Conta';
+        }
+        return showAlert(data.error || "Erro ao reivindicar recompensa.", 'error');
+      }
+
+      showAlert(data.message || "Recompensa resgatada com sucesso!");
+      loadDiscordAccounts();
+      loadAdminDiscord();
+      loadDashboardStats();
+
+      // Abre modal exibindo as credenciais exclusivas entregues
+      if (data.account && data.account.credentials) {
+        $('claimedModalTitle').textContent = data.account.title || data.account.email || 'Conta Discord';
+        $('claimedEmailVal').value = data.account.credentials.email || '';
+        $('claimedSenhaVal').value = data.account.credentials.senha || '(Sem senha cadastrada)';
+        $('claimedTokenVal').value = data.account.credentials.token || '(Sem token cadastrado)';
+        openModal('claimedRewardModal');
+      }
+    } catch (err) {
+      if (btnEl) {
+        btnEl.disabled = false;
+        btnEl.textContent = '🎁 Reivindicar Conta';
+      }
+      showAlert("Erro de conexão ao reivindicar recompensa.", 'error');
+    }
+  };
+
+  const btnClaim = $('btnExecuteClaim');
+  if (btnClaim) {
+    btnClaim.addEventListener('click', async () => {
+      if (!pendingClaimId) return;
+      const id = pendingClaimId;
+      closeModal('claimConfirmModal');
+      try {
+        const res = await apiFetch(`/api/discord/${id}/claim`, {
+          method: 'POST'
+        });
+        const data = await res.json();
+        if (!res.ok || !data.success) {
+          return showAlert(data.error || "Erro ao reivindicar recompensa.", 'error');
+        }
+        showAlert(data.message || "Recompensa resgatada com sucesso!");
+        loadDiscordAccounts();
+        loadAdminDiscord();
+        loadDashboardStats();
+
+        // Abre modal exibindo as credenciais exclusivas entregues
+        if (data.account && data.account.credentials) {
+          $('claimedModalTitle').textContent = data.account.title || data.account.email || 'Conta Discord';
+          $('claimedEmailVal').value = data.account.credentials.email || '';
+          $('claimedSenhaVal').value = data.account.credentials.senha || '(Sem senha cadastrada)';
+          $('claimedTokenVal').value = data.account.credentials.token || '(Sem token cadastrado)';
+          openModal('claimedRewardModal');
+        }
+      } catch (err) {
+        showAlert("Erro de conexão ao reivindicar recompensa.", 'error');
+      }
+    });
+  }
+
+  window.viewClaimedAccountCredentials = async function (id) {
+    try {
+      const res = await apiFetch(`/api/discord/${id}/my-credentials`);
+      const data = await res.json();
+      if (!res.ok || !data.success) {
+        return showAlert(data.error || "Erro ao buscar credenciais da conta resgatada.", 'error');
+      }
+      $('claimedModalTitle').textContent = data.account.title || data.account.email || 'Conta Discord';
+      $('claimedEmailVal').value = data.account.credentials.email || '';
+      $('claimedSenhaVal').value = data.account.credentials.senha || '(Sem senha cadastrada)';
+      $('claimedTokenVal').value = data.account.credentials.token || '(Sem token cadastrado)';
+      openModal('claimedRewardModal');
+    } catch (err) {
+      showAlert("Erro de conexão ao buscar credenciais.", 'error');
+    }
+  };
+
+  window.resetDiscordClaim = function (id) {
+    $('confirmModalText').textContent = "Deseja liberar o resgate desta conta novamente? Ela voltará a ficar disponível como Reward para todos os membros.";
+    pendingDeleteAction = async () => {
+      try {
+        const res = await apiFetch(`/api/admin/discord/${id}/reset-claim`, {
+          method: 'POST'
+        });
+        const data = await res.json();
+        if (!res.ok || !data.success) {
+          return showAlert(data.error || "Erro ao liberar recompensa.", 'error');
+        }
+        showAlert(data.message);
+        loadDiscordAccounts();
+        loadAdminDiscord();
+        loadDashboardStats();
+      } catch (err) {
+        showAlert("Erro de conexão ao liberar recompensa.", 'error');
+      }
+    };
+    openModal('confirmModal');
+  };
+
+  window.copyInputVal = function (inputId) {
+    const el = $(inputId);
+    if (!el || !el.value) return;
+    navigator.clipboard.writeText(el.value);
+    showAlert("Copiado para a área de transferência!");
+  };
+
+  window.revealSecret = function (id) {
+    $('revealAccountId').value = id;
+    $('revealAccountId').dataset.type = 'discord';
+    $('revealPinInput').value = '';
+    $('revealStepAuth').style.display = 'block';
+    $('revealStepResult').style.display = 'none';
+    openModal('revealModal');
+  };
+
+  $('revealPinForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const id = $('revealAccountId').value;
+    const type = $('revealAccountId').dataset.type || 'discord';
+    const pin = $('revealPinInput').value.trim();
+    const endpoint = type === 'painel' ? `/api/admin/painel/${id}/reveal` : `/api/admin/discord/${id}/reveal`;
+
+    try {
+      const res = await apiFetch(endpoint, {
+        method: 'POST',
+        body: JSON.stringify({ pin })
+      });
+      const data = await res.json();
+      if (!res.ok || !data.success) {
+        return showAlert(data.error || "PIN incorreto ou não autorizado.", 'error');
+      }
+      const title = data.title || data.label || data.user || 'Registro';
+      $('revealSecretTitle').textContent = `Credenciais de ${title}:`;
+      let display = data.secret;
+      if (typeof data.secret === 'object' && data.secret !== null) {
+        display = Object.entries(data.secret).map(([k,v]) => `${k}: ${v}`).join('\n');
+      }
+      $('revealSecretValue').value = display;
+      $('revealStepAuth').style.display = 'none';
+      $('revealStepResult').style.display = 'block';
+    } catch (err) {
+      showAlert("Erro ao conectar com servidor de decodificação.", 'error');
+    }
+  });
+
+  $('copySecretBtn').addEventListener('click', () => {
+    const val = $('revealSecretValue').value;
+    navigator.clipboard.writeText(val);
+    showAlert("Credencial copiada para a área de transferência!");
+  });
+
+  /* ---------- OPERAÇÕES: CADASTRAR NOVO ADMINISTRADOR ---------- */
+  $('newAdminForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const username = $('newAdminUsername').value.trim();
+    const name = $('newAdminName').value.trim();
+    const role = $('newAdminRole').value;
+    const pin = $('newAdminPin').value.trim();
+    const level = (role === 'Owner') ? 1 : ((role === 'Founder') ? 2 : 4);
+
+    try {
+      const res = await apiFetch('/api/admin/users', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ username, name, role, level, pin })
+      });
+      const data = await res.json();
+      if (!res.ok || !data.success) return showAlert(data.error || "Erro ao cadastrar integrante.", 'error');
+      showAlert(data.message);
+      $('newAdminForm').reset();
+      loadMembers();
+    } catch (err) {
+      showAlert("Erro de conexão ao cadastrar administrador.", 'error');
+    }
+  });
+
+  /* ---------- MODAL DE CONFIRMAÇÃO EXECUTAR ---------- */
+  $('executeConfirmBtn').addEventListener('click', async () => {
+    closeModal('confirmModal');
+    if (typeof pendingDeleteAction === 'function') {
+      await pendingDeleteAction();
+      pendingDeleteAction = null;
+    }
+  });
+
+  /* ---------- HIERARQUIA & MEMBROS ---------- */
+  async function loadMembers() {
+    try {
+      const res = await apiFetch('/api/dashboard/members');
+      const data = await res.json();
+      if (!data.success) return;
+      const formatBRL = (v) => Number(v).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+      $('membersTableBody').innerHTML = data.members.map(m => {
+        const initials = m.name.split(/\s+/).map(w => w[0]).join('').slice(0, 3).toUpperCase();
+        const canEdit = isAdmin || (currentUser && (currentUser.id === m.id || currentUser.username.toLowerCase() === m.username.toLowerCase()));
+        const avatarCell = m.avatarUrl ? `
+          <div style="width:36px;height:36px;border-radius:50%;overflow:hidden;border:1.5px solid var(--accent);box-shadow:0 0 10px rgba(255,42,58,0.3);flex-shrink:0">
+            <img src="${esc(m.avatarUrl)}" alt="${esc(m.name)}" style="width:100%;height:100%;object-fit:cover" onerror="this.parentElement.innerHTML='<span style=\\'display:flex;width:100%;height:100%;background:#1e0d10;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:var(--accent-2)\\'>${esc(initials)}</span>'">
+          </div>
+        ` : `
+          <div style="display:flex;width:36px;height:36px;border-radius:50%;background:#16090c;border:1px dashed var(--line-strong);align-items:center;justify-content:center;font-size:11px;font-weight:700;color:var(--mute);flex-shrink:0">
+            ${esc(initials)}
+          </div>
+        `;
+
+        return `
+        <tr>
+          <td><b>Nível ${esc(m.level)}</b></td>
+          <td>${avatarCell}</td>
+          <td><b style="color:#fff;font-size:15px">${esc(m.name)}</b><br><small style="color:var(--mute)">@${esc(m.username)}</small></td>
+          <td style="color:var(--accent-2);font-weight:700">${esc(m.role)}</td>
+          <td>${esc(m.profitShare)}</td>
+          <td style="color:var(--green);font-weight:700">${formatBRL(m.weeklyEarnings)}</td>
+          <td><span class="badge ${m.status === 'online' ? 'badge-online' : 'badge-off'}">● ${esc(m.status || 'OFFLINE')}</span></td>
+          <td style="font:500 12px var(--mono);color:var(--mute)">${esc(m.lastLogin || 'Não registrado')}</td>
+          <td style="text-align:right">
+            ${canEdit ? `
+              <button class="btn-out btn-sm" onclick="window.openAvatarModal('${m.id}', '${esc(m.name)}', '${esc(m.avatarUrl || '')}')" title="Alterar foto/ícone (Imgur)">
+                🖼️ Alterar Ícone
+              </button>
+            ` : '<span style="color:var(--dim);font-size:12px">—</span>'}
+          </td>
+        </tr>
+      `}).join('');
+    } catch (e) {
+      console.error(e);
+    }
+  }
+
+  /* ---------- GERENCIAR ÍCONE / AVATAR (IMGUR) ---------- */
+  window.openAvatarModal = function (id, name, currentUrl) {
+    $('avatarMemberId').value = id;
+    $('avatarMemberName').textContent = name;
+    $('avatarUrlInput').value = currentUrl || '';
+    updateAvatarPreview(currentUrl, name);
+    openModal('editAvatarModal');
+  };
+
+  function updateAvatarPreview(url, name) {
+    const previewImg = $('avatarPreviewImg');
+    const previewInitials = $('avatarPreviewInitials');
+    const initials = (name || $('avatarMemberName').textContent || 'NZI').split(/\s+/).map(w => w[0]).join('').slice(0, 3).toUpperCase();
+    previewInitials.textContent = initials;
+
+    if (url && url.trim()) {
+      let cleanUrl = url.trim();
+      const imgurMatch = cleanUrl.match(/^https?:\/\/(?:www\.)?imgur\.com\/([a-zA-Z0-9]+)$/);
+      if (imgurMatch && !['a', 'gallery', 't'].includes(imgurMatch[1])) {
+        cleanUrl = `https://i.imgur.com/${imgurMatch[1]}.png`;
+      }
+      previewImg.onload = () => {
+        previewImg.style.display = 'block';
+        previewInitials.style.display = 'none';
+      };
+      previewImg.onerror = () => {
+        previewImg.style.display = 'none';
+        previewInitials.style.display = 'block';
+      };
+      previewImg.src = cleanUrl;
+    } else {
+      previewImg.style.display = 'none';
+      previewInitials.style.display = 'block';
+    }
+  }
+
+  $('avatarUrlInput').addEventListener('input', (e) => {
+    updateAvatarPreview(e.target.value);
+  });
+
+  $('avatarForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const id = $('avatarMemberId').value;
+    const avatarUrl = $('avatarUrlInput').value.trim();
+
+    try {
+      const res = await apiFetch(`/api/members/${id}/avatar`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ avatarUrl })
+      });
+      const data = await res.json();
+      if (!res.ok || !data.success) {
+        return showAlert(data.error || "Erro ao salvar imagem do integrante.", 'error');
+      }
+      showAlert(data.message);
+      closeModal('editAvatarModal');
+      loadMembers();
+      if (currentUser && (currentUser.id === id || currentUser.username.toLowerCase() === id.toLowerCase())) {
+        currentUser.avatarUrl = data.avatarUrl;
+        renderUserProfile();
+      }
+    } catch (err) {
+      showAlert("Erro de conexão ao salvar imagem.", 'error');
+    }
+  });
+
+  $('btnRemoveAvatar').addEventListener('click', async () => {
+    const id = $('avatarMemberId').value;
+    $('avatarUrlInput').value = '';
+    try {
+      const res = await apiFetch(`/api/members/${id}/avatar`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ avatarUrl: '' })
+      });
+      const data = await res.json();
+      if (!res.ok || !data.success) return showAlert(data.error || "Erro ao remover imagem.", 'error');
+      showAlert("Ícone removido com sucesso!");
+      closeModal('editAvatarModal');
+      loadMembers();
+      if (currentUser && (currentUser.id === id || currentUser.username.toLowerCase() === id.toLowerCase())) {
+        currentUser.avatarUrl = null;
+        renderUserProfile();
+      }
+    } catch (err) {
+      showAlert("Erro de conexão ao remover imagem.", 'error');
+    }
+  });
+
+  /* ---------- TROCAR PIN ---------- */
+  $('changePinForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const currentPin = $('currentPin').value.trim();
+    const newPin = $('newPin').value.trim();
+    const confirm = $('confirmNewPin').value.trim();
+
+    if (newPin !== confirm) return showAlert("A confirmação do novo PIN não confere.", 'error');
+    try {
+      const res = await apiFetch('/api/auth/change-pin', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ currentPin, newPin })
+      });
+      const data = await res.json();
+      if (!res.ok || !data.success) return showAlert(data.error || "Erro ao alterar PIN.", 'error');
+      showAlert(data.message);
+      $('changePinForm').reset();
+    } catch (err) {
+      showAlert("Erro de conexão ao alterar PIN.", 'error');
+    }
+  });
+
+  /* ---------- AUDITORIA ---------- */
+  async function loadAuditLogs() {
+    try {
+      const res = await apiFetch('/api/dashboard/audit-logs');
+      const data = await res.json();
+      if (!data.success) return;
+      $('auditTableBody').innerHTML = data.auditLogs.map(l => {
+        const isBloqueado = l.status === 'BLOQUEADO';
+        const isIpBlock = l.action && l.action.includes('IP_BLOQUEADO');
+        const isHwidBlock = l.action && l.action.includes('DISPOSITIVO_BLOQUEADO');
+        const isReset = l.action && l.action.includes('RESET');
+        let actionColor = 'inherit';
+        if (isIpBlock) actionColor = '#f97316';
+        else if (isHwidBlock) actionColor = '#ef4444';
+        else if (isReset) actionColor = '#22c55e';
+        const hwidShort = l.hwid ? l.hwid.substring(0, 20) + '…' : '<span style="color:var(--mute)">—</span>';
+        return `
+        <tr>
+          <td style="font:500 11px var(--mono);color:var(--mute);white-space:nowrap">${esc(l.timestamp)}</td>
+          <td><b>${esc(l.member)}</b></td>
+          <td style="color:var(--mute)">${esc(l.role)}</td>
+          <td><code style="color:${actionColor};font-size:11px">${esc(l.action)}</code></td>
+          <td style="font:500 12px var(--mono);color:${isBloqueado ? '#f97316' : 'var(--mute)'}">${esc(l.ip)}</td>
+          <td style="font:500 11px var(--mono);color:var(--mute)" title="${l.hwid || ''}">${hwidShort}</td>
+          <td><span class="badge ${l.status === 'SUCESSO' ? 'badge-in' : 'badge-out'}">${esc(l.status)}</span></td>
+        </tr>
+      `}).join('');
+    } catch (e) {
+      console.error(e);
+    }
+  }
+
+  /* ---------- PAINEL DE SEGURANÇA IP/HWID (admin) ---------- */
+  async function loadSecurityPanel() {
+    if (!isAdmin) return;
+    const tbody = $('securityTableBody');
+    try {
+      const res = await apiFetch('/api/admin/security');
+      const data = await res.json();
+      if (!data.success) {
+        tbody.innerHTML = `<tr><td colspan="6" style="color:var(--accent);text-align:center">${esc(data.error)}</td></tr>`;
+        return;
+      }
+      tbody.innerHTML = data.members.map(m => `
+        <tr>
+          <td><b>${esc(m.name)}</b><br><span style="font-size:11px;color:var(--mute)">@${esc(m.username)}</span></td>
+          <td style="color:var(--mute)">${esc(m.role)}</td>
+          <td style="font:500 12px var(--mono);color:${m.trustedIp ? 'var(--green)' : 'var(--mute)'}">
+            ${m.trustedIp ? esc(m.trustedIp) : '<span style="color:var(--mute)">Não registrado</span>'}
+          </td>
+          <td style="font:500 11px var(--mono);color:${m.trustedHwid ? 'var(--green)' : 'var(--mute)'}">
+            ${m.trustedHwid ? esc(m.trustedHwid) : '<span style="color:var(--mute)">Não registrado</span>'}
+          </td>
+          <td style="font:500 11px var(--mono);color:var(--mute)">${m.lastLogin ? esc(m.lastLogin) : '—'}</td>
+          <td>
+            <div style="display:flex;gap:6px;flex-wrap:wrap">
+              <button class="btn-secondary" style="font-size:11px;padding:4px 10px;color:#f97316;border-color:#f97316" onclick="resetMemberSecurity('${esc(m.username)}', 'ip')">Reset IP</button>
+              <button class="btn-secondary" style="font-size:11px;padding:4px 10px;color:#ef4444;border-color:#ef4444" onclick="resetMemberSecurity('${esc(m.username)}', 'hwid')">Reset HWID</button>
+              <button class="btn-secondary" style="font-size:11px;padding:4px 10px;color:#22c55e;border-color:#22c55e" onclick="resetMemberSecurity('${esc(m.username)}', 'all')">Reset Tudo</button>
+            </div>
+          </td>
+        </tr>
+      `).join('');
+    } catch (e) {
+      tbody.innerHTML = `<tr><td colspan="6" style="color:var(--accent);text-align:center">Erro ao carregar dados de segurança.</td></tr>`;
+    }
+  }
+
+  async function resetMemberSecurity(username, type) {
+    const labels = { ip: 'IP', hwid: 'HWID', all: 'IP e HWID' };
+    const endpoints = { ip: 'reset-ip', hwid: 'reset-hwid', all: 'reset' };
+    if (!confirm(`Resetar ${labels[type]} de @${username}? O próximo login registrará novos dados confiáveis.`)) return;
+    try {
+      const res = await apiFetch(`/api/admin/security/${encodeURIComponent(username)}/${endpoints[type]}`, { method: 'POST' });
+      const data = await res.json();
+      if (data.success) {
+        showAlert(data.message);
+        loadSecurityPanel();
+      } else {
+        showAlert(data.error || 'Erro ao resetar segurança.', 'error');
+      }
+    } catch (e) {
+      showAlert('Erro de conexão ao resetar segurança.', 'error');
+    }
+  }
+
+  // Inicialização
+  if (location.hash && $(location.hash.slice(1))) {
+    goTo(location.hash.slice(1));
+  }
+  checkAuth();
+})();
+</script>
+</body>
+</html>

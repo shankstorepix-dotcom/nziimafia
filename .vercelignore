@@ -1,0 +1,7 @@
+.env
+.env.*
+database.json
+data/
+*.bak
+*.log
+migrate-to-supabase.js

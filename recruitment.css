@@ -1,0 +1,178 @@
+/* ==========================================================
+   NZI — Página Recrutamento
+   Reaproveita as variáveis (:root) e as classes do index.html:
+   .page .section-head .lead .feed-top .rec .field .btn
+   Tudo escopado em #view-recruit para não afetar as outras abas.
+   ========================================================== */
+#view-recruit { --glow: rgba(255, 42, 58, .45); --ok: #2ee67a; }
+
+#view-recruit .rc-acc { color: var(--accent); text-shadow: 0 0 22px var(--glow); }
+#view-recruit .rc-lead { max-width: 72ch; color: #e6d0d1; }
+
+/* layout: formulário + coluna lateral */
+#view-recruit .rc-grid {
+  display: grid; grid-template-columns: minmax(0, 1.7fr) minmax(0, 1fr);
+  gap: 24px; margin-top: 32px; align-items: start;
+}
+
+/* cartão do formulário */
+#view-recruit .rc-card {
+  position: relative; min-width: 0;
+  border: 1px solid var(--accent-deep);
+  background:
+    radial-gradient(520px 220px at 100% 0%, rgba(255, 42, 58, .10), transparent 70%),
+    var(--panel);
+  box-shadow: 0 0 48px rgba(255, 42, 58, .12);
+}
+/* cantoneiras vermelhas (detalhe premium) */
+#view-recruit .rc-card::before,
+#view-recruit .rc-card::after {
+  content: ""; position: absolute; width: 18px; height: 18px; pointer-events: none;
+  border: 2px solid var(--accent);
+}
+#view-recruit .rc-card::before { top: -1px; left: -1px; border-right: 0; border-bottom: 0; }
+#view-recruit .rc-card::after { bottom: -1px; right: -1px; border-left: 0; border-top: 0; }
+#view-recruit .rc-body { padding: 26px 24px 24px; }
+
+/* campos */
+#view-recruit .rc-label-row { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; }
+#view-recruit .rc-count { font-size: 12px; letter-spacing: .08em; color: var(--mute); font-variant-numeric: tabular-nums; }
+#view-recruit .rc-count.is-max { color: var(--accent); }
+#view-recruit .field input[aria-invalid="true"] { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(255, 42, 58, .18); }
+#view-recruit .rc-hint { margin: 2px 0 0; font-size: 12px; color: var(--mute); }
+#view-recruit .rc-err { margin: 2px 0 0; font-size: 12px; color: #ff6b76; min-height: 0; }
+#view-recruit .rc-err[hidden] { display: none; }
+
+/* seletor de requisito (rádio único, acessível pelo teclado: setas) */
+#view-recruit .rc-fieldset { border: 0; padding: 0; margin: 0 0 22px; min-width: 0; }
+#view-recruit .rc-fieldset legend {
+  padding: 0; margin-bottom: 10px; font-size: 11px; letter-spacing: .18em; text-transform: uppercase; color: var(--mute);
+}
+#view-recruit .rc-fieldset legend small { letter-spacing: .08em; text-transform: none; color: var(--accent); margin-left: 6px; }
+
+#view-recruit .rc-options {
+  counter-reset: rc;
+  display: grid; gap: 10px;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 230px), 1fr));
+}
+#view-recruit .rc-opt {
+  counter-increment: rc;
+  position: relative; display: flex; align-items: center; gap: 12px;
+  min-height: 64px; padding: 12px 40px 12px 14px; min-width: 0;
+  border: 1px solid var(--line); background: #070303; color: var(--fg);
+  cursor: pointer; user-select: none; -webkit-tap-highlight-color: transparent;
+  transition: border-color .2s, background-color .2s, box-shadow .2s, transform .2s;
+}
+#view-recruit .rc-opt input {
+  position: absolute; inset: 0; width: 100%; height: 100%; margin: 0; opacity: 0; cursor: pointer;
+}
+#view-recruit .rc-num {
+  flex: none; font-family: var(--display); font-weight: 900; font-size: 26px; line-height: 1;
+  color: var(--accent-deep); transition: color .2s, text-shadow .2s;
+}
+#view-recruit .rc-num::before { content: counter(rc, decimal-leading-zero); }
+#view-recruit .rc-txt { min-width: 0; overflow-wrap: anywhere; font-size: 14px; line-height: 1.35; }
+#view-recruit .rc-check {
+  position: absolute; top: 50%; right: 12px; width: 18px; height: 18px; margin-top: -9px;
+  border: 1px solid var(--accent-deep); border-radius: 50%;
+  transition: border-color .2s, background-color .2s, box-shadow .2s;
+}
+#view-recruit .rc-check::after {
+  content: ""; position: absolute; left: 5px; top: 2px; width: 5px; height: 9px;
+  border: solid #120405; border-width: 0 2px 2px 0; transform: rotate(45deg) scale(0); transition: transform .18s;
+}
+#view-recruit .rc-opt:hover { border-color: var(--accent-deep); transform: translateY(-1px); }
+#view-recruit .rc-opt:hover .rc-num { color: #a3141f; }
+#view-recruit .rc-opt input:checked ~ .rc-num { color: var(--accent); text-shadow: 0 0 14px var(--glow); }
+#view-recruit .rc-opt input:checked ~ .rc-check { border-color: var(--accent); background: var(--accent); box-shadow: 0 0 12px var(--glow); }
+#view-recruit .rc-opt input:checked ~ .rc-check::after { transform: rotate(45deg) scale(1); }
+/* estado selecionado do cartão (classe aplicada pelo JS, funciona em qualquer navegador) */
+#view-recruit .rc-opt.is-checked {
+  border-color: var(--accent);
+  background: linear-gradient(135deg, rgba(255, 42, 58, .16), rgba(110, 13, 22, .10)), #070303;
+  box-shadow: 0 0 24px rgba(255, 42, 58, .22);
+}
+#view-recruit .rc-opt:focus-within { border-color: var(--accent); }
+#view-recruit .rc-opt input:focus-visible ~ .rc-check { outline: 2px solid var(--accent); outline-offset: 3px; }
+#view-recruit .rc-fieldset.is-invalid .rc-opt { border-color: #8a1f28; }
+
+/* isca anti-spam: fora da tela, invisível para pessoas e leitores de tela */
+#view-recruit .rc-trap { position: absolute !important; left: -9999px !important; width: 1px; height: 1px; overflow: hidden; }
+
+/* botão (reaproveita .btn do site) */
+#view-recruit .rc-submit { position: relative; display: flex; align-items: center; justify-content: center; gap: 10px; box-shadow: 0 0 26px rgba(255, 42, 58, .35); transition: background-color .2s, box-shadow .2s, transform .2s; }
+#view-recruit .rc-submit:hover:not(:disabled) { box-shadow: 0 0 38px var(--glow); transform: translateY(-1px); }
+#view-recruit .rc-submit:disabled { opacity: .6; cursor: progress; }
+#view-recruit .rc-submit .rc-spin { display: none; width: 16px; height: 16px; border: 2px solid rgba(18, 4, 5, .35); border-top-color: #120405; border-radius: 50%; animation: rc-spin .7s linear infinite; }
+#view-recruit .rc-submit[aria-busy="true"] .rc-spin { display: inline-block; }
+@keyframes rc-spin { to { transform: rotate(360deg); } }
+
+/* feedback de sucesso / erro */
+#view-recruit .rc-feedback {
+  margin-top: 16px; padding: 12px 14px 12px 42px; position: relative;
+  border: 1px solid var(--accent-deep); background: rgba(255, 42, 58, .07);
+  font-size: 13px; line-height: 1.5; color: var(--fg);
+  animation: rc-in .3s ease both;
+}
+#view-recruit .rc-feedback[hidden] { display: none; }
+#view-recruit .rc-feedback::before {
+  position: absolute; left: 12px; top: 11px; width: 20px; height: 20px; border-radius: 50%;
+  display: grid; place-items: center; font: 700 12px/20px var(--mono); text-align: center; color: #120405;
+}
+#view-recruit .rc-feedback strong { display: block; font-family: var(--display); font-weight: 900; font-size: 22px; letter-spacing: .06em; text-transform: uppercase; line-height: 1.1; margin-bottom: 2px; }
+#view-recruit .rc-feedback.is-ok { border-color: var(--ok); background: rgba(46, 230, 122, .07); box-shadow: 0 0 22px rgba(46, 230, 122, .14); }
+#view-recruit .rc-feedback.is-ok::before { content: "✓"; background: var(--ok); }
+#view-recruit .rc-feedback.is-ok strong { color: var(--ok); }
+#view-recruit .rc-feedback.is-err { border-color: var(--accent); background: rgba(255, 42, 58, .09); box-shadow: 0 0 22px rgba(255, 42, 58, .16); animation: rc-in .3s ease both, rc-shake .4s .05s ease both; }
+#view-recruit .rc-feedback.is-err::before { content: "!"; background: var(--accent); }
+#view-recruit .rc-feedback.is-err strong { color: var(--accent); }
+@keyframes rc-in { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+@keyframes rc-shake { 20% { transform: translateX(-5px); } 45% { transform: translateX(5px); } 70% { transform: translateX(-3px); } 100% { transform: none; } }
+
+/* botão "Aguarde seu recrutamento no Root" (aparece dentro do aviso de sucesso) */
+#view-recruit .rc-root-btn {
+  display: flex; align-items: center; justify-content: center; margin-top: 12px; padding: 12px 16px;
+  background: var(--accent); color: #120405; text-decoration: none; text-align: center;
+  font-family: var(--display); font-weight: 900; font-size: 22px; letter-spacing: .08em; text-transform: uppercase;
+  box-shadow: 0 0 24px rgba(255, 42, 58, .4); transition: background-color .2s, box-shadow .2s, transform .2s;
+}
+#view-recruit .rc-root-btn::after { content: "→"; margin-left: 10px; }
+#view-recruit .rc-root-btn:hover { background: #ff4a58; box-shadow: 0 0 36px var(--glow); transform: translateY(-1px); }
+@media (max-width: 480px) { #view-recruit .rc-root-btn { font-size: 19px; } }
+
+/* coluna lateral */
+#view-recruit .rc-side { display: grid; gap: 16px; min-width: 0; }
+#view-recruit .rc-panel { border: 1px solid var(--line); background: var(--panel); padding: 20px; }
+#view-recruit .rc-panel h3 { margin: 0 0 12px; font-family: var(--display); font-weight: 900; font-size: 28px; line-height: 1; text-transform: uppercase; }
+#view-recruit .rc-panel h3 span { color: var(--accent); }
+#view-recruit .rc-steps { list-style: none; margin: 0; padding: 0; counter-reset: st; display: grid; gap: 14px; }
+#view-recruit .rc-steps li { counter-increment: st; display: flex; gap: 12px; align-items: baseline; font-size: 13px; color: #d6bcbd; }
+#view-recruit .rc-steps li::before {
+  content: counter(st); flex: none; width: 26px; height: 26px; display: grid; place-items: center;
+  border: 1px solid var(--accent); color: var(--accent); font: 900 16px/1 var(--display);
+  box-shadow: 0 0 12px rgba(255, 42, 58, .25);
+}
+#view-recruit .rc-steps b { color: var(--fg); font-weight: 600; }
+#view-recruit .rc-note { margin: 0; font-size: 11px; color: var(--mute); line-height: 1.6; }
+
+/* móvel */
+@media (max-width: 860px) {
+  #view-recruit .rc-grid { grid-template-columns: 1fr; margin-top: 24px; }
+  #view-recruit .rc-side { order: 2; }
+}
+@media (max-width: 480px) {
+  #view-recruit .rc-body { padding: 20px 16px 18px; }
+  #view-recruit .rc-opt { min-height: 60px; }
+  #view-recruit .field input { font-size: 16px; } /* evita zoom automático do iOS ao focar */
+}
+/* nav com 4–5 abas no celular: as abas preenchem as linhas por igual em vez de quebrar de forma irregular */
+@media (max-width: 560px) {
+  .nav .tabs { width: 100%; }
+  .nav .tabs a { flex: 1 1 auto; text-align: center; padding: 8px 10px; }
+}
+@media (max-width: 480px) {
+  #view-recruit .rc-submit { font-size: 22px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  #view-recruit *, #view-recruit *::before, #view-recruit *::after { animation: none !important; transition: none !important; }
+}

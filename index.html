@@ -1,0 +1,1315 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Nzi Mafia</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@700;900&family=IBM+Plex+Mono:wght@400;500;600&family=Rajdhani:wght@600;700&display=swap" rel="stylesheet">
+<style>
+/* Layout: navegação fina no topo com 4 abas (Início, Entretenimento, Recrutamento, Login). Início = hero com título hacker + GIF e a árvore de hierarquia. Entretenimento = canais oficiais + rádio. Login = PIN de 6 dígitos validado no back-end. Tema todo vermelho sobre preto avermelhado. */
+[hidden] { display: none !important; }
+:root {
+  --bg: #0b0606;
+  --panel: #130a0a;
+  --line: #3a1719;
+  --fg: #efdede;
+  --mute: #9b7a7c;
+  --accent: #ff2a3a;
+  --accent-deep: #6e0d16;
+  --display: "Big Shoulders Display", "Arial Narrow", Impact, sans-serif;
+  --mono: "IBM Plex Mono", ui-monospace, "Courier New", monospace;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+body {
+  background-color: var(--bg);
+  background-image: radial-gradient(ellipse 70% 40% at 85% 0%, rgba(255,42,58,.16), transparent 70%);
+  background-repeat: no-repeat;
+  color: var(--fg);
+  font-family: var(--mono);
+  font-size: 15px;
+  line-height: 1.6;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-block: 0 48px;
+}
+.wrap { max-width: 1040px; margin: 0 auto; }
+
+/* nav */
+.nav {
+  display: flex; justify-content: space-between; align-items: center; gap: 8px 16px; flex-wrap: wrap;
+  padding-block: 14px; border-bottom: 1px solid var(--line);
+}
+.brand { font-family: var(--display); font-weight: 900; font-size: 28px; letter-spacing: .06em; text-transform: uppercase; color: var(--fg); text-decoration: none; line-height: 1; }
+.brand b { color: var(--accent); font-weight: 900; }
+.tabs { display: flex; gap: 6px; flex-wrap: wrap; }
+.tabs a {
+  font-size: 12px; letter-spacing: .14em; text-transform: uppercase; color: var(--mute);
+  text-decoration: none; padding: 8px 12px; border: 1px solid transparent;
+}
+.tabs a:hover { color: var(--fg); }
+.tabs a[hidden] { display: none; }
+.tabs a[aria-current="page"] { color: var(--accent); border-color: var(--accent-deep); background: var(--panel); }
+
+/* hero */
+.hero {
+  display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr);
+  gap: 40px; align-items: center; padding-block: 56px 72px;
+}
+.kicker { font-size: 12px; letter-spacing: .24em; text-transform: uppercase; color: var(--accent); margin: 0 0 14px; }
+h1 {
+  font-family: var(--display); font-weight: 900; text-transform: uppercase;
+  font-size: clamp(64px, 12vw, 132px); line-height: .86; letter-spacing: .01em;
+  margin: 0 0 18px; display: block;
+}
+h1 .ln { display: block; white-space: nowrap; }
+h1 .acc { color: var(--accent); text-shadow: 0 0 28px rgba(255,42,58,.5); }
+h1 .cur { display: inline-block; width: .09em; height: .72em; margin-left: .08em; background: var(--accent); vertical-align: -.02em; animation: blink 1s steps(2) infinite; }
+h1.glitching { animation: glitch .42s steps(1) 1; }
+@keyframes glitch {
+  0%   { text-shadow: 5px 0 var(--accent), -5px 0 #fff; transform: translate(3px, 0); }
+  20%  { text-shadow: -6px 0 var(--accent), 6px 0 var(--accent-deep); transform: translate(-4px, 1px) skewX(-5deg); }
+  45%  { text-shadow: 4px 0 #fff, -4px 0 var(--accent); transform: translate(2px, -1px); }
+  70%  { text-shadow: -5px 0 var(--accent); transform: translate(-1px, 0) skewX(3deg); }
+  100% { text-shadow: none; transform: none; }
+}
+.typeline { min-height: 1.6em; margin: 0 0 20px; font-size: 14px; color: var(--accent); }
+.typeline::after { content: ""; display: inline-block; width: 8px; height: 15px; margin-left: 3px; background: var(--accent); vertical-align: -2px; animation: blink 1s steps(2) infinite; }
+.lead { max-width: 46ch; margin: 0 0 24px; color: var(--fg); }
+.rule { display: inline-flex; align-items: center; gap: 10px; font-size: 13px; color: var(--mute); }
+.rule i { width: 8px; height: 8px; background: var(--accent); display: inline-block; }
+
+/* feed / gif screen */
+.feed { margin: 0; border: 1px solid var(--accent-deep); background: var(--panel); box-shadow: 0 0 40px rgba(255,42,58,.12); }
+.feed-top {
+  display: flex; justify-content: space-between; gap: 10px; padding: 8px 12px;
+  border-bottom: 1px solid var(--line); font-size: 11px; letter-spacing: .12em; text-transform: uppercase; color: var(--mute);
+}
+.rec { color: var(--accent); }
+.rec::before { content: ""; display: inline-block; width: 7px; height: 7px; border-radius: 50%; background: var(--accent); margin-right: 6px; animation: blink 1.2s steps(2) infinite; }
+.screen { position: relative; aspect-ratio: 16 / 9; max-width: 100%; overflow: hidden; background: #070303; }
+.screen img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; z-index: 2; }
+.screen::after {
+  content: ""; position: absolute; inset: 0; z-index: 3; pointer-events: none;
+  background: repeating-linear-gradient(to bottom, rgba(0,0,0,.3) 0 1px, transparent 1px 3px);
+}
+.term { position: absolute; inset: 0; padding: 18px; font-size: 13px; color: #e59a9f; display: flex; flex-direction: column; justify-content: flex-end; gap: 4px; }
+.term p { margin: 0; overflow: hidden; white-space: nowrap; width: 0; animation: type 1.6s steps(34) forwards; }
+.term p:nth-child(1) { animation-delay: .3s; }
+.term p:nth-child(2) { animation-delay: 2.1s; }
+.term p:nth-child(3) { animation-delay: 3.9s; }
+.term p:nth-child(4) { animation-delay: 5.7s; }
+.term p:nth-child(5) { animation-delay: 7.5s; color: var(--accent); }
+.term .cur { display: inline-block; width: 8px; height: 14px; background: var(--accent); vertical-align: -2px; animation: blink 1s steps(2) infinite; }
+@keyframes type { to { width: 100%; } }
+@keyframes blink { 50% { opacity: 0; } }
+.feed figcaption { padding: 8px 12px; border-top: 1px solid var(--line); font-size: 11px; color: var(--mute); letter-spacing: .08em; }
+
+/* section heads */
+.section-head { display: flex; align-items: baseline; justify-content: space-between; gap: 16px; border-bottom: 1px solid var(--line); padding-bottom: 12px; margin-bottom: 8px; }
+h2 { font-family: var(--display); font-weight: 900; text-transform: uppercase; font-size: clamp(36px, 6vw, 56px); line-height: 1; margin: 0; }
+.section-head p { margin: 0; font-size: 12px; letter-spacing: .14em; text-transform: uppercase; color: var(--mute); text-align: right; }
+.page { padding-top: 48px; }
+.page .lead { margin-top: 16px; }
+
+/* hierarchy */
+.tree { display: flex; flex-direction: column; align-items: center; padding-top: 8px; }
+.tier { width: 100%; display: flex; flex-direction: column; align-items: center; }
+.tier + .tier::before { content: ""; width: 1px; height: 32px; background: var(--line); }
+.tier-label { margin: 10px 0 14px; font-size: 11px; letter-spacing: .22em; text-transform: uppercase; color: var(--mute); }
+.tier-label b { color: var(--accent); font-weight: 600; }
+
+.node { border: 1px solid var(--line); background: var(--panel); text-align: center; min-width: 0; }
+.role { display: block; font-size: 11px; letter-spacing: .2em; text-transform: uppercase; color: var(--accent); }
+.name { display: block; font-family: var(--display); font-weight: 900; text-transform: uppercase; letter-spacing: .02em; overflow-wrap: anywhere; }
+
+.owner { padding: 26px 56px; border-color: var(--accent); box-shadow: 0 0 0 4px var(--bg), 0 0 0 5px rgba(255,42,58,.4), 0 0 48px rgba(255,42,58,.18); }
+.owner .name { font-size: clamp(44px, 9vw, 72px); line-height: 1; margin-top: 6px; }
+
+.founder { padding: 20px 44px; border-color: #8a1f28; }
+.founder .name { font-size: clamp(34px, 7vw, 52px); line-height: 1; margin-top: 4px; }
+
+.posses, .subposses { position: relative; display: grid; width: 100%; grid-template-columns: 1fr 1fr; gap: 20px; max-width: 520px; }
+.posses::before, .subposses::before { content: ""; position: absolute; top: -18px; left: 25%; right: 25%; height: 1px; background: var(--line); }
+.posses .node::before, .subposses .node::before { content: ""; position: absolute; top: -18px; left: 50%; width: 1px; height: 18px; background: var(--line); }
+.posses .node, .subposses .node { position: relative; }
+
+.members { position: relative; display: grid; width: 100%; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 14px; max-width: 840px; }
+.members::before { content: ""; position: absolute; top: -18px; left: 12.5%; right: 12.5%; height: 1px; background: var(--line); }
+.members .node::before { content: ""; position: absolute; top: -18px; left: 50%; width: 1px; height: 18px; background: var(--line); }
+.members .node { position: relative; }
+
+.posse, .subposse { padding: 16px 12px; }
+.posse .name { font-size: clamp(28px, 5vw, 38px); line-height: 1; margin-top: 4px; }
+.subposse .name { font-size: clamp(26px, 4.5vw, 34px); line-height: 1; margin-top: 4px; }
+.member { padding: 14px 8px; }
+.member .name { font-size: clamp(20px, 3.5vw, 26px); line-height: 1.05; }
+.members .node:hover, .subposses .node:hover, .posses .node:hover { border-color: var(--accent); }
+
+/* entretenimento */
+.links { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 1fr)); gap: 20px; padding-top: 32px; }
+.link-card {
+  display: flex; flex-direction: column; gap: 12px; padding: 28px 24px; min-width: 0;
+  border: 1px solid var(--accent-deep); background: var(--panel); color: var(--fg); text-decoration: none;
+}
+.link-card:hover { border-color: var(--accent); box-shadow: 0 0 36px rgba(255,42,58,.22); }
+.link-card svg { width: 60px; height: 60px; color: var(--accent); }
+.link-card .n { font-family: var(--display); font-weight: 900; font-size: 44px; line-height: 1; text-transform: uppercase; }
+.link-card .u { font-size: 13px; color: var(--mute); overflow-wrap: anywhere; }
+.link-card .go { margin-top: 8px; font-size: 12px; letter-spacing: .18em; text-transform: uppercase; color: var(--accent); }
+
+/* login */
+.login { max-width: 440px; margin-top: 32px; padding: 28px 24px; border: 1px solid var(--accent-deep); background: var(--panel); box-shadow: 0 0 40px rgba(255,42,58,.12); }
+.field { display: flex; flex-direction: column; gap: 6px; margin-bottom: 16px; }
+.field label { font-size: 11px; letter-spacing: .18em; text-transform: uppercase; color: var(--mute); }
+.field input { background: #070303; border: 1px solid var(--line); color: var(--fg); font: inherit; padding: 12px 14px; border-radius: 0; width: 100%; }
+.pins { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 8px; }
+.pins input { text-align: center; font-size: 22px; padding: 12px 0; }
+.restrict { margin: 0 0 16px; padding: 8px 12px; border: 1px solid var(--accent-deep); color: var(--accent); font-size: 11px; letter-spacing: .18em; text-transform: uppercase; }
+.field input:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px rgba(255,42,58,.22); }
+.btn { font-family: var(--display); font-weight: 900; font-size: 26px; letter-spacing: .08em; text-transform: uppercase; background: var(--accent); color: #120405; border: 0; border-radius: 0; padding: 10px 20px; cursor: pointer; width: 100%; transition: background .15s ease; }
+.btn:hover { background: #ff4a58; }
+.btn:disabled { opacity: 0.6; cursor: not-allowed; }
+.btn.ghost { background: transparent; color: var(--accent); border: 1px solid var(--accent-deep); font-size: 20px; }
+.btn.ghost:hover { border-color: var(--accent); background: transparent; }
+.msg { min-height: 1.4em; margin: 12px 0 0; font-size: 13px; color: var(--accent); }
+.welcome .role { margin-bottom: 4px; }
+.welcome .name { font-size: 56px; line-height: 1; margin-bottom: 6px; }
+.welcome p { margin: 0 0 20px; color: var(--mute); }
+.welcome .stack { display: grid; gap: 10px; }
+.welcome a.btn { display: block; text-align: center; text-decoration: none; }
+
+/* PIN Keypad Component */
+.pin-keypad-container {
+  display: flex;
+  margin-top: 32px;
+}
+.pin-keypad-container .card {
+  --pin-bg: #0c0a0a;
+  --pin-surface: #171212;
+  --pin-fg: #f5e9e9;
+  --pin-muted: #9c7c7c;
+  --pin-accent: #e0263f;
+  --pin-danger: #ff4d4d;
+  --pin-border: #3a1f1f;
+  width: 100%;
+  max-width: 360px;
+  background: var(--pin-surface);
+  border: 1px solid var(--pin-border);
+  border-radius: 20px;
+  padding: 28px 24px 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  box-shadow: 0 0 45px rgba(224, 38, 63, 0.18);
+  animation: pinCardFadeIn 0.22s ease-out;
+}
+@keyframes pinCardFadeIn {
+  from { opacity: 0; transform: translateY(8px) scale(0.98); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+.pin-keypad-container .card h1 {
+  font-size: 1.15rem;
+  font-weight: 600;
+  margin: 0;
+  text-align: center;
+  color: var(--pin-fg);
+  font-family: inherit;
+  letter-spacing: .02em;
+}
+.pin-keypad-container .card p.sub {
+  margin: 4px 0 0;
+  text-align: center;
+  color: var(--pin-muted);
+  font-size: 0.85rem;
+}
+.pin-keypad-container .dots {
+  display: flex;
+  justify-content: center;
+  gap: 14px;
+  margin: 4px 0 2px;
+}
+.pin-keypad-container .dot {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  border: 1.5px solid var(--pin-border);
+  background: transparent;
+  transition: background .12s ease, border-color .12s ease, transform .12s ease, box-shadow .12s ease;
+}
+.pin-keypad-container .dot.filled {
+  background: var(--pin-accent);
+  border-color: var(--pin-accent);
+  transform: scale(1.08);
+  box-shadow: 0 0 8px rgba(224, 38, 63, 0.5);
+}
+.pin-keypad-container .dot.error {
+  background: var(--pin-danger);
+  border-color: var(--pin-danger);
+  box-shadow: 0 0 10px rgba(255, 77, 77, 0.65);
+}
+.pin-keypad-container .dot.success {
+  background: #2ee67a;
+  border-color: #2ee67a;
+  box-shadow: 0 0 10px rgba(46, 230, 122, 0.65);
+}
+.pin-keypad-container .status {
+  min-height: 1.2em;
+  text-align: center;
+  font-size: 0.85rem;
+  color: var(--pin-danger);
+  font-variant-numeric: tabular-nums;
+  transition: color .15s ease;
+}
+.pin-keypad-container .status.neutral { color: var(--pin-muted); }
+.pin-keypad-container .status.success { color: #2ee67a; }
+.pin-keypad-container .keypad {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+}
+.pin-keypad-container .key {
+  appearance: none;
+  border: 1px solid var(--pin-border);
+  background: var(--pin-bg);
+  color: var(--pin-fg);
+  font-size: 1.25rem;
+  font-variant-numeric: tabular-nums;
+  border-radius: 14px;
+  aspect-ratio: 1;
+  cursor: pointer;
+  transition: background .1s ease, transform .08s ease, opacity .1s ease, border-color .1s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  user-select: none;
+}
+.pin-keypad-container .key:hover { background: #1c1313; border-color: var(--pin-accent); }
+.pin-keypad-container .key:active { transform: scale(0.94); }
+.pin-keypad-container .key:focus-visible { outline: 2px solid var(--pin-accent); outline-offset: 2px; }
+.pin-keypad-container .key:disabled { opacity: 0.4; cursor: not-allowed; }
+.pin-keypad-container .key.wide { font-size: 0.85rem; color: var(--pin-muted); }
+.pin-keypad-container .lock-note {
+  font-size: 0.75rem;
+  color: var(--pin-muted);
+  text-align: center;
+  line-height: 1.4;
+  margin: 0;
+  min-height: 1.2em;
+}
+.pin-back-link {
+  background: transparent;
+  border: 0;
+  color: var(--pin-muted);
+  font-size: 0.8rem;
+  text-align: center;
+  cursor: pointer;
+  text-decoration: underline;
+  opacity: 0.8;
+  padding: 4px;
+  transition: opacity .15s ease, color .15s ease;
+}
+.pin-back-link:hover { opacity: 1; color: var(--pin-fg); }
+
+footer { margin-top: 72px; padding-top: 16px; border-top: 1px solid var(--line); display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap; font-size: 12px; letter-spacing: .12em; text-transform: uppercase; color: var(--mute); }
+
+@media (max-width: 760px) {
+  .hero { grid-template-columns: 1fr; gap: 32px; padding-block: 36px 52px; }
+  .section-head { flex-direction: column; align-items: flex-start; gap: 6px; }
+  .section-head p { text-align: left; }
+  .owner { padding: 22px 32px; }
+  .founder { padding: 18px 30px; }
+  .members { display: flex; flex-wrap: wrap; justify-content: center; max-width: 420px; }
+  .members .node { flex: 0 0 calc(50% - 6px); }
+  .members::before, .members .node::before { display: none; }
+  .page { padding-top: 32px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .term p { animation: none; width: 100%; }
+  .term .cur, .rec::before, h1 .cur, .typeline::after { animation: none; }
+  h1.glitching { animation: none; }
+}
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+/* ===== entretenimento (completo: canais e rádio) — tudo escopado em #view-fun ===== */
+#view-fun { --glow: rgba(255,42,58,.45); --green: #2ee67a; --gold: #ffb020; --line-strong: rgba(255,42,58,.55); --ui: "Rajdhani", "Segoe UI", system-ui, sans-serif; }
+#view-fun .fx-reveal { opacity: 0; transform: translateY(16px); transition: opacity .6s ease, transform .6s ease; }
+#view-fun .fx-reveal.in { opacity: 1; transform: none; }
+#view-fun .fx-sec { margin-top: 36px; }
+#view-fun .fx-sec > h3 { margin: 0 0 14px; font-family: var(--display); font-weight: 900; font-size: clamp(30px, 5vw, 44px); line-height: 1; text-transform: uppercase; }
+#view-fun .fx-sec > h3 span { color: var(--accent); text-shadow: 0 0 16px var(--glow); }
+#view-fun .fx-sec > h3 small { font: 500 12px var(--mono); letter-spacing: .14em; color: var(--mute); margin-left: 12px; text-shadow: none; }
+#view-fun .fx-dot { width: 9px; height: 9px; border-radius: 50%; background: var(--green); box-shadow: 0 0 10px var(--green); display: inline-block; animation: fxpulse 2s ease-in-out infinite; }
+@keyframes fxpulse { 50% { opacity: .4; transform: scale(.8); } }
+#view-fun .fx-card { position: relative; border: 1px solid var(--accent-deep); background: var(--panel); padding: 22px; transition: border-color .25s, box-shadow .25s, transform .25s; }
+#view-fun .fx-card.hv:hover { border-color: var(--accent); box-shadow: 0 0 32px rgba(255,42,58,.22); transform: translateY(-3px); }
+
+/* stats */
+#view-fun .fx-stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 14px; margin-top: 26px; }
+#view-fun .fx-stat { display: flex; align-items: center; gap: 14px; padding: 16px; }
+#view-fun .fx-ring { width: 54px; height: 54px; flex: none; border-radius: 50%; display: grid; place-items: center; border: 1.5px solid var(--accent); background: radial-gradient(circle, rgba(255,42,58,.18), transparent 70%); box-shadow: 0 0 18px rgba(255,42,58,.35), inset 0 0 12px rgba(255,42,58,.25); }
+#view-fun .fx-ring svg { width: 25px; height: 25px; stroke: var(--accent); fill: none; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; filter: drop-shadow(0 0 5px var(--accent)); }
+#view-fun .fx-stat .l { font: 500 11px var(--mono); letter-spacing: .14em; text-transform: uppercase; color: var(--mute); }
+#view-fun .fx-stat .v { font: 800 30px/1.1 var(--ui); color: #fff; }
+#view-fun .fx-stat .v.acc { color: var(--accent); text-shadow: 0 0 14px var(--glow); }
+#view-fun .fx-stat .s { font-size: 12px; color: var(--green); }
+
+/* canais */
+#view-fun .fx-channels { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 340px), 1fr)); gap: 16px; }
+#view-fun .fx-channel { overflow: hidden; display: flex; flex-direction: column; justify-content: space-between; gap: 18px; min-height: 290px; padding: 26px; }
+#view-fun .fx-channel::before { content: ""; position: absolute; right: -60px; top: -60px; width: 260px; height: 260px; background: radial-gradient(circle, rgba(255,42,58,.28), transparent 65%); transition: transform .5s; pointer-events: none; }
+#view-fun .fx-channel:hover::before { transform: scale(1.25) translate(-10px, 10px); }
+#view-fun .fx-channel > * { position: relative; }
+#view-fun .fx-top { display: flex; align-items: center; gap: 16px; }
+#view-fun .fx-ico { width: 68px; height: 68px; flex: none; display: grid; place-items: center; border: 1.5px solid var(--accent); border-radius: 16px; background: radial-gradient(circle, rgba(255,42,58,.22), rgba(10,3,4,.9)); box-shadow: 0 0 24px rgba(255,42,58,.4), inset 0 0 16px rgba(255,42,58,.25); transition: transform .3s; }
+#view-fun .fx-channel:hover .fx-ico { transform: rotate(-6deg) scale(1.06); }
+#view-fun .fx-ico svg { width: 36px; height: 36px; fill: var(--accent); filter: drop-shadow(0 0 6px var(--accent)); }
+#view-fun .fx-tag { display: inline-flex; align-items: center; gap: 6px; font: 600 11px var(--mono); letter-spacing: .16em; text-transform: uppercase; color: var(--accent); }
+#view-fun .fx-channel h4 { margin: 2px 0 0; font: 900 36px/1 var(--display); text-transform: uppercase; }
+#view-fun .fx-channel p { margin: 16px 0 0; color: #d6bcbd; }
+#view-fun .fx-meta { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 14px; }
+#view-fun .fx-pill { padding: 4px 12px; border: 1px solid var(--line); border-radius: 999px; font-size: 12px; color: var(--mute); background: rgba(0,0,0,.35); overflow-wrap: anywhere; }
+#view-fun .fx-pill b { color: #fff; font-weight: 600; }
+#view-fun .fx-btns { display: flex; gap: 10px; flex-wrap: wrap; }
+#view-fun .fx-solid { flex: 1; min-width: 180px; display: inline-flex; justify-content: center; align-items: center; padding: 13px 18px; background: var(--accent); color: #120405; border: 0; font: 900 22px var(--display); letter-spacing: .08em; text-transform: uppercase; text-decoration: none; cursor: pointer; box-shadow: 0 0 24px rgba(255,42,58,.4); transition: all .2s; }
+#view-fun .fx-solid:hover { background: #ff4a58; box-shadow: 0 0 36px var(--glow); transform: translateY(-2px); }
+#view-fun .fx-solid:disabled { opacity: .55; cursor: not-allowed; transform: none; }
+#view-fun .fx-ghost { padding: 13px 18px; border: 1px solid var(--accent-deep); background: transparent; color: var(--fg); font: 700 12px var(--mono); letter-spacing: .14em; text-transform: uppercase; cursor: pointer; transition: all .2s; }
+#view-fun .fx-ghost:hover { border-color: var(--accent); color: var(--accent); }
+
+/* rádio */
+#view-fun .fx-radio { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr)); gap: 22px; align-items: center; }
+#view-fun .fx-now { font: 600 11px var(--mono); letter-spacing: .22em; text-transform: uppercase; color: var(--accent); }
+#view-fun .fx-track { margin: 4px 0 2px; font: 900 clamp(30px, 5vw, 42px)/1 var(--display); text-transform: uppercase; }
+#view-fun .fx-sub { color: var(--mute); font-size: 13px; margin-bottom: 16px; }
+#view-fun .fx-stations { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 16px; }
+#view-fun .fx-station { padding: 8px 14px; border: 1px solid var(--line); border-radius: 999px; background: rgba(0,0,0,.35); color: var(--fg); font: 600 12px var(--mono); letter-spacing: .08em; cursor: pointer; transition: all .2s; }
+#view-fun .fx-station:hover { border-color: var(--line-strong); }
+#view-fun .fx-station.active { border-color: var(--accent); background: rgba(255,42,58,.16); color: #fff; box-shadow: 0 0 16px rgba(255,42,58,.3); }
+#view-fun .fx-player { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; }
+#view-fun .fx-play { width: 56px; height: 56px; border-radius: 50%; border: 0; background: var(--accent); color: #120405; font-size: 20px; cursor: pointer; box-shadow: 0 0 24px var(--glow); transition: all .2s; }
+#view-fun .fx-play:hover { transform: scale(1.08); background: #ff4a58; }
+#view-fun .fx-vol { display: flex; align-items: center; gap: 10px; flex: 1; min-width: 150px; font-size: 11px; letter-spacing: .12em; color: var(--mute); text-transform: uppercase; }
+#view-fun .fx-vol input { width: 100%; padding: 0; height: 6px; appearance: none; -webkit-appearance: none; background: linear-gradient(90deg, var(--accent) var(--v, 40%), #2a0c10 var(--v, 40%)); border: 0; border-radius: 6px; cursor: pointer; }
+#view-fun .fx-vol input::-webkit-slider-thumb { -webkit-appearance: none; width: 16px; height: 16px; border-radius: 50%; background: #fff; border: 2px solid var(--accent); box-shadow: 0 0 10px var(--accent); }
+#view-fun .fx-vol input::-moz-range-thumb { width: 14px; height: 14px; border-radius: 50%; background: #fff; border: 2px solid var(--accent); }
+#view-fun .fx-viz { width: 100%; height: 150px; display: block; border: 1px solid var(--line); background: #040102; }
+#view-fun .fx-toast { position: fixed; bottom: 24px; right: 24px; z-index: 2000; padding: 12px 20px; background: #12060a; border: 1px solid var(--accent); color: #fff; font-size: 12px; box-shadow: 0 0 26px rgba(255,42,58,.5); transform: translateY(90px); opacity: 0; transition: all .35s cubic-bezier(.18,.89,.32,1.28); pointer-events: none; }
+#view-fun .fx-toast.show { transform: none; opacity: 1; }
+@media (prefers-reduced-motion: reduce) { #view-fun .fx-reveal { opacity: 1; transform: none; transition: none; } #view-fun * { animation: none !important; } }
+</style>
+<link rel="stylesheet" href="/recruitment.css">
+
+<div class="wrap">
+  <nav class="nav" aria-label="Principal">
+    <a class="brand" href="#inicio" data-view="inicio"><b>NZI</b> Mafia</a>
+    <div class="tabs">
+      <a href="#inicio" data-view="inicio">Início</a>
+      <a href="#entretenimento" data-view="entretenimento">Entretenimento</a>
+      <a href="#recrutamento" data-view="recrutamento">Recrutamento</a>
+      <a href="/dashboard" id="nav-dashboard" hidden>Dashboard</a>
+      <a href="#login" data-view="login">Login</a>
+    </div>
+  </nav>
+
+  <!-- INÍCIO -->
+  <div id="view-home">
+    <section class="hero">
+      <div>
+        <p class="kicker">Organizated Crime</p>
+        <h1 id="title" aria-label="Nzi Mafia"><span class="ln"><span data-t="NZI">NZI</span></span><span class="ln acc"><span data-t="MAFIA">MAFIA</span><span class="cur" aria-hidden="true"></span></span></h1>
+        <p class="typeline" id="typeline" aria-hidden="true">&gt; dinheiro primeiro</p>
+        <p class="lead">A Nzi Mafia é uma organização focada em ganhar dinheiro. Cada membro tem um cargo, cada cargo tem uma função, e o lucro é o único objetivo.</p>
+        <span class="rule"><i></i> Dinheiro primeiro. O resto vem depois.</span>
+      </div>
+
+      <figure class="feed">
+        <div class="feed-top"><span>feed://nzi-01</span><span class="rec">ao vivo</span></div>
+        <div class="screen">
+          <img src="mrrobot.gif" alt="Mr. Robot" onerror="this.remove()">
+          <div class="term" aria-hidden="true">
+            <p>&gt; conectando ao servidor...</p>
+            <p>&gt; acesso liberado</p>
+            <p>&gt; contando o caixa da semana</p>
+            <p>&gt; lucro dividido entre a hierarquia</p>
+            <p>&gt; nzi mafia online <span class="cur"></span></p>
+          </div>
+        </div>
+        <figcaption>Transmissão interna. Só quem está na hierarquia vê.</figcaption>
+      </figure>
+    </section>
+
+    <section aria-labelledby="hier">
+      <div class="section-head">
+        <h2 id="hier">Hierarquia</h2>
+        <p>5 níveis · 11 integrantes</p>
+      </div>
+
+      <div class="tree">
+        <div class="tier">
+          <p class="tier-label"><b>Nível 1</b> · Dono</p>
+          <div class="node owner"><span class="role">Owner</span><span class="name">PH LABUBU</span></div>
+        </div>
+
+        <div class="tier">
+          <p class="tier-label"><b>Nível 2</b> · Fundador</p>
+          <div class="node founder"><span class="role">Founder</span><span class="name">DG</span></div>
+        </div>
+
+        <div class="tier">
+          <p class="tier-label"><b>Nível 3</b> · Posses</p>
+          <div class="posses" style="margin-top:18px">
+            <div class="node posse"><span class="role">Posse</span><span class="name">LIFEEC</span></div>
+            <div class="node posse"><span class="role">Posse</span><span class="name">HELP</span></div>
+          </div>
+        </div>
+
+        <div class="tier">
+          <p class="tier-label"><b>Nível 4</b> · Sub-posses</p>
+          <div class="subposses" style="margin-top:18px">
+            <div class="node subposse"><span class="role">Sub-Posse</span><span class="name">NECRO</span></div>
+            <div class="node subposse"><span class="role">Sub-Posse</span><span class="name">DAHAKI</span></div>
+            <div class="node subposse"><span class="role">Sub-Posse</span><span class="name">NANA</span></div>
+          </div>
+        </div>
+
+        <div class="tier">
+          <p class="tier-label"><b>Nível 5</b> · Membros</p>
+          <div class="members" style="margin-top:18px">
+            <div class="node member"><span class="role">Membro</span><span class="name">QEV</span></div>
+            <div class="node member"><span class="role">Membro</span><span class="name">KAGE</span></div>
+            <div class="node member"><span class="role">Membro</span><span class="name">LUCI</span></div>
+            <div class="node member"><span class="role">Membro</span><span class="name">ANNY</span></div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <!-- ENTRETENIMENTO -->
+  <section id="view-fun" class="page" aria-labelledby="fun-h" hidden>
+    <div class="section-head">
+      <h2 id="fun-h">Entretenimento</h2>
+      <p>comunidade Nzi</p>
+    </div>
+    <p class="lead">Entre nos canais da comunidade e ouça a rádio NZI.</p>
+
+    <svg width="0" height="0" style="position:absolute" aria-hidden="true">
+      <symbol id="fx-i-chat" viewBox="0 0 24 24"><path d="M4 5h16v11H9l-5 4z"/></symbol>
+      <symbol id="fx-i-crown" viewBox="0 0 24 24"><path d="M3 8l4.5 4L12 5l4.5 7L21 8l-2 11H5z"/></symbol>
+      <symbol id="fx-i-music" viewBox="0 0 24 24"><path d="M9 18V5l11-2v13"/><circle cx="6.5" cy="18" r="2.5"/><circle cx="17.5" cy="16" r="2.5"/></symbol>
+    </svg>
+
+    <div class="fx-stats">
+      <div class="fx-card fx-stat hv"><div class="fx-ring"><svg><use href="#fx-i-chat"/></svg></div><div><div class="l">Canais oficiais</div><div class="v">2</div><div class="s">Discord · Telegram</div></div></div>
+      <div class="fx-card fx-stat hv"><div class="fx-ring"><svg><use href="#fx-i-music"/></svg></div><div><div class="l">Estações</div><div class="v">4</div><div class="s">Luxúria + 3 sintetizadas</div></div></div>
+      <div class="fx-card fx-stat hv"><div class="fx-ring"><svg><use href="#fx-i-crown"/></svg></div><div><div class="l">Faixa em destaque</div><div class="v acc" style="font-size:24px">Luxúria</div><div class="s">Matuê &amp; Xamã</div></div></div>
+      <div class="fx-card fx-stat hv"><div class="fx-ring"><svg><use href="#fx-i-music"/></svg></div><div><div class="l">Rádio</div><div class="v" id="stRadio" style="font-size:24px">Desligada</div><div class="s" id="stStation">3 estações</div></div></div>
+    </div>
+
+    <div class="fx-sec fx-reveal" id="canais">
+      <h3>Canais <span>oficiais</span><small>Discord e Telegram</small></h3>
+      <div class="fx-channels">
+        <article class="fx-card fx-channel hv">
+          <div>
+            <div class="fx-top">
+              <div class="fx-ico"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057 19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028c.462-.63.874-1.295 1.226-1.994.021-.041.001-.09-.041-.106a13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.929 1.793 8.18 1.793 12.061 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.894.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.028zM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.956-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.956 2.418-2.157 2.418zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.955-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.946 2.418-2.157 2.418z"/></svg></div>
+              <div><span class="fx-tag"><span class="fx-dot"></span> Comunidade de voz</span><h4>Discord</h4></div>
+            </div>
+            <p>Entre no servidor principal da NZI, participe das chamadas de voz, converse no chat e acompanhe os eventos.</p>
+          </div>
+          <div>
+            <div class="fx-meta"><span class="fx-pill">Link: <b>discord.gg/m0gshot</b></span><span class="fx-pill">Status: <b style="color:var(--green)">● disponível</b></span></div>
+            <div class="fx-btns">
+              <a class="fx-solid" href="https://discord.gg/m0gshot" target="_blank" rel="noopener noreferrer">Entrar no servidor →</a>
+              <button class="fx-ghost" type="button" data-copy="https://discord.gg/m0gshot" data-msg="Link do Discord copiado!">Copiar</button>
+            </div>
+          </div>
+        </article>
+        <article class="fx-card fx-channel hv">
+          <div>
+            <div class="fx-top">
+              <div class="fx-ico"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.894 8.221l-1.97 9.28c-.145.658-.537.818-1.084.508l-3-2.21-1.446 1.394c-.16.16-.295.295-.605.295l.213-3.053 5.56-5.023c.242-.213-.054-.333-.373-.121l-6.871 4.326-2.962-.924c-.643-.204-.657-.643.136-.953l11.57-4.46c.537-.194 1.006.131.832.965z"/></svg></div>
+              <div><span class="fx-tag"><span class="fx-dot"></span> Avisos e comunicados</span><h4>Telegram</h4></div>
+            </div>
+            <p>Grupo da NZI no Telegram para notificações rápidas, avisos importantes e comunicados de emergência.</p>
+          </div>
+          <div>
+            <div class="fx-meta"><span class="fx-pill">Canal: <b>convite seguro</b></span><span class="fx-pill">Status: <b style="color:var(--green)">● ativo</b></span></div>
+            <div class="fx-btns">
+              <a class="fx-solid" href="https://t.me/+Om4I_IjpI6liNmMx" target="_blank" rel="noopener noreferrer">Entrar no grupo →</a>
+              <button class="fx-ghost" type="button" data-copy="https://t.me/+Om4I_IjpI6liNmMx" data-msg="Link do Telegram copiado!">Copiar</button>
+            </div>
+          </div>
+        </article>
+      </div>
+    </div>
+
+    <div class="fx-sec fx-reveal" id="radio">
+      <h3>Rádio <span>NZI</span><small>Luxúria + trilhas sintetizadas</small></h3>
+      <div class="fx-card">
+        <div class="fx-radio">
+          <div>
+            <div class="fx-now" id="nowLabel">● Em espera</div>
+            <div class="fx-track" id="trackName">Luxúria</div>
+            <div class="fx-sub" id="trackSub">Matuê &amp; Xamã</div>
+            <div class="fx-stations" id="stations" role="tablist" aria-label="Estações"></div>
+            <div class="fx-player">
+              <button class="fx-play" id="playBtn" type="button" aria-label="Ligar rádio">▶</button>
+              <label class="fx-vol">Vol <input type="range" id="vol" min="0" max="100" value="40" aria-label="Volume"></label>
+            </div>
+          </div>
+          <div>
+            <canvas class="fx-viz" id="viz" width="900" height="300" aria-hidden="true"></canvas>
+            <div id="embedWrap" hidden>
+              <iframe id="spotify" title="Luxúria — Xamã e Matuê (Spotify)" loading="lazy" style="border:0;width:100%;height:152px;border-radius:12px" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"></iframe>
+              <a href="https://open.spotify.com/track/5kuUOpHZlZjL8b7HXkxRsm" target="_blank" rel="noopener noreferrer" style="display:inline-block;margin-top:8px;color:var(--accent);font-size:12px;letter-spacing:.14em;text-transform:uppercase">Abrir no Spotify ↗</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="fx-toast" id="toast" role="status"></div>
+  </section>
+
+  <!-- RECRUTAMENTO -->
+  <section id="view-recruit" class="page" aria-labelledby="rc-h" hidden>
+    <div class="section-head">
+      <h2 id="rc-h">Recrutamento <span class="rc-acc">NZI</span></h2>
+      <p>candidaturas abertas</p>
+    </div>
+    <p class="lead rc-lead">Quer conquistar a tag da NZI? Para participar do recrutamento, você precisa cumprir pelo menos um dos requisitos disponíveis abaixo. Escolha apenas um requisito que você realmente atende e envie sua candidatura para análise da equipe.</p>
+
+    <div class="rc-grid">
+      <div class="rc-card">
+        <div class="feed-top"><span>recrutamento://nzi-tag</span><span class="rec">inscrições abertas</span></div>
+
+        <!-- data-root-url: link do botão "Aguarde seu recrutamento no Root" que aparece após o envio -->
+        <form id="rc-form" class="rc-body" novalidate autocomplete="off" data-root-url="https://rootapp.gg/ADH4UZrshwqEpUmSkCNYFw" data-root-label="Aguarde seu recrutamento no Root">
+          <div class="field">
+            <div class="rc-label-row">
+              <label for="rc-nick">Nick</label>
+              <span class="rc-count" id="rc-count" aria-hidden="true">0/15</span>
+            </div>
+            <input id="rc-nick" name="nick" type="text" maxlength="15" required autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="Seu nick (até 15 caracteres)" aria-describedby="rc-nick-hint rc-nick-err">
+            <p class="rc-hint" id="rc-nick-hint">Máximo de 15 caracteres.</p>
+            <p class="rc-err" id="rc-nick-err" role="alert" hidden></p>
+          </div>
+
+          <fieldset class="rc-fieldset" id="rc-fieldset" aria-describedby="rc-req-err">
+            <legend>Requisito <small>escolha apenas um</small></legend>
+
+            <!-- ====================== REQUISITOS (EDITÁVEIS) ======================
+                 Para trocar um requisito, altere SOMENTE o texto dentro de
+                 <span class="rc-txt">…</span>  (ex.: "Text 1" → "Ter 5 anos de servidor").
+                 NÃO mude o value="1".."8" nem as classes: a numeração 01–08 é automática
+                 e o servidor aceita apenas os valores de 1 a 8.
+                 ==================================================================== -->
+            <div class="rc-options" role="radiogroup" aria-label="Requisitos do recrutamento">
+              <label class="rc-opt"><input type="radio" name="requirement" value="1" required><span class="rc-num" aria-hidden="true"></span><span class="rc-txt">BW</span><span class="rc-check" aria-hidden="true"></span></label>
+              <label class="rc-opt"><input type="radio" name="requirement" value="2"><span class="rc-num" aria-hidden="true"></span><span class="rc-txt">Plaq</span><span class="rc-check" aria-hidden="true"></span></label>
+              <label class="rc-opt"><input type="radio" name="requirement" value="3"><span class="rc-num" aria-hidden="true"></span><span class="rc-txt">Luz Cat</span><span class="rc-check" aria-hidden="true"></span></label>
+              <label class="rc-opt"><input type="radio" name="requirement" value="4"><span class="rc-num" aria-hidden="true"></span><span class="rc-txt">Fire Bible</span><span class="rc-check" aria-hidden="true"></span></label>
+              <label class="rc-opt"><input type="radio" name="requirement" value="5"><span class="rc-num" aria-hidden="true"></span><span class="rc-txt">Vandalism</span><span class="rc-check" aria-hidden="true"></span></label>
+              <label class="rc-opt"><input type="radio" name="requirement" value="6"><span class="rc-num" aria-hidden="true"></span><span class="rc-txt">2 Plaq SH</span><span class="rc-check" aria-hidden="true"></span></label>
+              <label class="rc-opt"><input type="radio" name="requirement" value="7"><span class="rc-num" aria-hidden="true"></span><span class="rc-txt">BW Artística</span><span class="rc-check" aria-hidden="true"></span></label>
+            </div>
+            <!-- ==================== FIM DOS REQUISITOS EDITÁVEIS ==================== -->
+
+            <p class="rc-err" id="rc-req-err" role="alert" hidden></p>
+          </fieldset>
+
+          <!-- campo isca anti-spam: deixe vazio e escondido -->
+          <div class="rc-trap" aria-hidden="true"><label>Não preencha este campo<input type="text" name="website" tabindex="-1" autocomplete="off"></label></div>
+
+          <button class="btn rc-submit" id="rc-submit" type="submit"><span class="rc-spin" aria-hidden="true"></span><span class="rc-btn-label">Enviar candidatura</span></button>
+          <div class="rc-feedback" id="rc-feedback" aria-live="polite" aria-atomic="true" hidden></div>
+        </form>
+      </div>
+
+      <aside class="rc-side" aria-label="Como funciona">
+        <div class="rc-panel">
+          <h3>Como <span>funciona</span></h3>
+          <ol class="rc-steps">
+            <li><span><b>Escolha um requisito</b> que você realmente cumpre. Só um por candidatura.</span></li>
+            <li><span><b>Informe seu nick</b> exatamente como aparece no jogo.</span></li>
+            <li><span><b>Envie</b> e aguarde: a equipe da NZI analisa cada candidatura.</span></li>
+          </ol>
+        </div>
+        <p class="rc-note">Privacidade: guardamos seu nick, o requisito escolhido e o IP truncado (para evitar spam). Usamos esses dados só para analisar a candidatura.</p>
+      </aside>
+    </div>
+  </section>
+
+  <!-- LOGIN NZI -->
+  <section id="view-login" class="page" aria-labelledby="login-h" hidden>
+    <div class="section-head">
+      <h2 id="login-h">Login</h2>
+      <p>acesso restrito · autenticação segura 2fa</p>
+    </div>
+    <p class="lead">Acesso restrito apenas para membros autorizados. Autenticação multifator com Usuário, Senha e PIN de Segurança.</p>
+
+    <!-- ETAPA 1: Formulário com Usuário e Senha -->
+    <div class="login" id="login-credentials-card">
+      <form id="login-form" novalidate>
+        <p class="restrict">Acesso restrito · Autenticação de Membro</p>
+        <div class="field">
+          <label for="handle">Nome de membro (Usuário)</label>
+          <input id="handle" name="handle" type="text" autocomplete="username" autocapitalize="off" spellcheck="false" placeholder="ex: seu_usuario" required>
+        </div>
+        <div class="field">
+          <label for="pwd">Senha de acesso</label>
+          <input id="pwd" name="password" type="password" autocomplete="current-password" placeholder="••••••••••••" required>
+        </div>
+        <button class="btn" type="submit" id="btn-login-submit">Entrar</button>
+        <p class="msg" id="login-msg" role="alert"></p>
+      </form>
+    </div>
+
+    <!-- ETAPA 2: PIN Keypad (aparece ao apertar o botão de entrar) -->
+    <div class="pin-keypad-container" id="pin-keypad-container" hidden>
+      <div class="card" id="pin-card">
+        <div>
+          <h1>Enter PIN</h1>
+          <p class="sub" id="pin-sub">Tap the digits below</p>
+        </div>
+
+        <div class="dots" id="dots" aria-hidden="true"></div>
+        <div class="status neutral" id="status" role="status" aria-live="polite">&nbsp;</div>
+
+        <div class="keypad" id="keypad"></div>
+
+        <p class="lock-note" id="lockNote"></p>
+        <button type="button" class="pin-back-link" id="pin-back-btn">← Voltar ao login</button>
+      </div>
+    </div>
+
+    <!-- SUCESSO: Painel de boas-vindas -->
+    <div class="login" id="welcome-container" hidden>
+      <div class="welcome" id="welcome" hidden>
+        <span class="role" id="w-role">Membro</span>
+        <span class="name" id="w-name">Nome</span>
+        <p>Acesso liberado. Bem-vindo à Nzi.</p>
+        <div class="stack">
+          <a class="btn" href="/dashboard">Ir para o Dashboard</a>
+          <a class="btn ghost" href="#entretenimento" data-view="entretenimento">Entretenimento</a>
+          <button class="btn ghost" type="button" id="logout">Sair</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <span>Nzi Mafia</span>
+    <span>Dinheiro primeiro</span>
+    <span id="privacy-note" style="flex-basis:100%;text-transform:none;letter-spacing:.02em;font-size:11px;opacity:.8">Privacidade: para estatísticas e segurança registramos, de forma resumida, o IP truncado, a localização aproximada, a página e o navegador, por até <b id="privacy-days">90</b> dias. Sem cookies. Respeitamos Do Not Track e Global Privacy Control.</span>
+  </footer>
+</div>
+
+<script>
+(function () {
+  /* ---------- abas (hash simples) ---------- */
+  var views = { inicio: 'view-home', entretenimento: 'view-fun', recrutamento: 'view-recruit', login: 'view-login' };
+  var links = Array.prototype.slice.call(document.querySelectorAll('.tabs a'));
+  function route() {
+    var h = (location.hash || '').replace('#', '');
+    if (h === 'acesso') h = 'login';
+    if (!views[h]) h = 'inicio';
+    Object.keys(views).forEach(function (k) {
+      document.getElementById(views[k]).hidden = (k !== h);
+    });
+    links.forEach(function (a) {
+      if (a.getAttribute('data-view') === h) a.setAttribute('aria-current', 'page');
+      else a.removeAttribute('aria-current');
+    });
+    window.scrollTo(0, 0);
+  }
+  window.addEventListener('hashchange', route);
+  route();
+
+  /* ---------- login de membros (Fluxo em 2 Etapas com PIN Keypad) ----------
+     Ao clicar em Entrar, valida usuário e senha no backend (step1).
+     Em seguida, abre a tela do PIN Keypad para validação do PIN de 6 dígitos (step2). */
+  var form = document.getElementById('login-form');
+  var msg = document.getElementById('login-msg');
+  var btnLoginSubmit = document.getElementById('btn-login-submit');
+  var credentialsCard = document.getElementById('login-credentials-card');
+  var keypadContainer = document.getElementById('pin-keypad-container');
+  var welcomeContainer = document.getElementById('welcome-container');
+  var welcome = document.getElementById('welcome');
+  var pinSub = document.getElementById('pin-sub');
+  var pinBackBtn = document.getElementById('pin-back-btn');
+
+  var PIN_LENGTH = 6;
+  var MAX_ATTEMPTS = 5;
+  var LOCK_SECONDS = 30;
+
+  var currentTicket = null;
+  var currentUsername = null;
+  var enteredPin = "";
+  var attempts = 0;
+  var lockedUntil = 0;
+  var lockTimer = null;
+  var isSubmittingPin = false;
+
+  var dotsEl = document.getElementById("dots");
+  var statusEl = document.getElementById("status");
+  var keypadEl = document.getElementById("keypad");
+  var lockNoteEl = document.getElementById("lockNote");
+
+  function renderDots(state) {
+    if (!dotsEl) return;
+    dotsEl.innerHTML = "";
+    for (var i = 0; i < PIN_LENGTH; i++) {
+      var d = document.createElement("div");
+      d.className = "dot" + (i < enteredPin.length ? (" filled" + (state ? " " + state : "")) : "");
+      dotsEl.appendChild(d);
+    }
+  }
+
+  function setStatus(msgText, kind) {
+    if (!statusEl) return;
+    statusEl.textContent = msgText || "\u00a0";
+    statusEl.className = "status" + (kind ? " " + kind : "");
+  }
+
+  function isLocked() {
+    return Date.now() < lockedUntil;
+  }
+
+  function updateLockNote() {
+    if (!lockNoteEl) return;
+    if (!isLocked()) {
+      lockNoteEl.textContent = "";
+      return;
+    }
+    var remaining = Math.ceil((lockedUntil - Date.now()) / 1000);
+    lockNoteEl.textContent = "Muitas tentativas falhas. Tente novamente em " + remaining + "s.";
+  }
+
+  function setKeysDisabled(disabled) {
+    if (!keypadEl) return;
+    var keys = keypadEl.querySelectorAll(".key");
+    keys.forEach(function (k) { k.disabled = disabled; });
+  }
+
+  function startLock(seconds) {
+    var sec = seconds || LOCK_SECONDS;
+    lockedUntil = Date.now() + sec * 1000;
+    setKeysDisabled(true);
+    setStatus("Bloqueado — limite de tentativas excedido.");
+    updateLockNote();
+    clearInterval(lockTimer);
+    lockTimer = setInterval(function () {
+      updateLockNote();
+      if (!isLocked()) {
+        clearInterval(lockTimer);
+        setKeysDisabled(false);
+        setStatus("Enter PIN", "neutral");
+        if (lockNoteEl) lockNoteEl.textContent = "";
+        attempts = 0;
+      }
+    }, 250);
+  }
+
+  function resetPin() {
+    enteredPin = "";
+    renderDots();
+  }
+
+  function submitPin() {
+    if (isLocked() || isSubmittingPin) return;
+    isSubmittingPin = true;
+    setKeysDisabled(true);
+    setStatus("Verificando PIN...", "neutral");
+
+    fetch('/api/auth/login/verify-pin', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      credentials: 'include',
+      body: JSON.stringify({
+        ticket: currentTicket,
+        pin: enteredPin,
+        hwid: DEVICE_HWID
+      })
+    })
+    .then(function (r) {
+      return r.json().then(function (d) { return { ok: r.ok, status: r.status, d: d }; });
+    })
+    .then(function (res) {
+      isSubmittingPin = false;
+      var d = res.d;
+      if (d && d.success) {
+        if (d.token) { try { localStorage.setItem('nzi_token', d.token); } catch (e) {} }
+        renderDots("success");
+        setStatus("PIN aceito. Acesso liberado.", "success");
+        setKeysDisabled(true);
+        setTimeout(function () {
+          keypadContainer.hidden = true;
+          showWelcome(d.member);
+          setTimeout(function () {
+            location.href = d.redirectUrl || '/dashboard';
+          }, 800);
+        }, 500);
+      } else {
+        attempts++;
+        renderDots("error");
+        var attemptsLeft = (d && typeof d.attemptsLeft === 'number') ? d.attemptsLeft : (MAX_ATTEMPTS - attempts);
+        if (res.status === 429 || (d && d.locked) || attemptsLeft <= 0) {
+          startLock((d && d.lockSeconds) || LOCK_SECONDS);
+        } else {
+          setKeysDisabled(false);
+          setStatus((d && d.error) || ("PIN incorreto. " + attemptsLeft + " tentativa" + (attemptsLeft === 1 ? "" : "s") + " restante" + (attemptsLeft === 1 ? "" : "s") + "."));
+        }
+        setTimeout(function () {
+          resetPin();
+          if (!isLocked()) setStatus("Enter PIN", "neutral");
+        }, 450);
+      }
+    })
+    .catch(function (err) {
+      isSubmittingPin = false;
+      setKeysDisabled(false);
+      renderDots("error");
+      setStatus("Erro de conexão com o servidor.");
+      setTimeout(function () {
+        resetPin();
+        if (!isLocked()) setStatus("Enter PIN", "neutral");
+      }, 500);
+      console.error('pin verification error', err);
+    });
+  }
+
+  function pressDigit(d) {
+    if (isLocked() || isSubmittingPin || enteredPin.length >= PIN_LENGTH) return;
+    enteredPin += d;
+    renderDots();
+    if (enteredPin.length === PIN_LENGTH) {
+      setTimeout(submitPin, 120);
+    }
+  }
+
+  function pressBackspace() {
+    if (isLocked() || isSubmittingPin) return;
+    enteredPin = enteredPin.slice(0, -1);
+    renderDots();
+  }
+
+  // Montagem do layout do teclado numérico
+  if (keypadEl) {
+    var layout = ["1","2","3","4","5","6","7","8","9","clear","0","back"];
+    keypadEl.innerHTML = "";
+    layout.forEach(function (label) {
+      var btn = document.createElement("button");
+      btn.type = "button";
+      btn.className = "key";
+      if (label === "clear") {
+        btn.classList.add("wide");
+        btn.textContent = "Clear";
+        btn.addEventListener("click", function () {
+          if (isLocked() || isSubmittingPin) return;
+          resetPin();
+          setStatus("Enter PIN", "neutral");
+        });
+      } else if (label === "back") {
+        btn.classList.add("wide");
+        btn.textContent = "⌫";
+        btn.setAttribute("aria-label", "Backspace");
+        btn.addEventListener("click", pressBackspace);
+      } else {
+        btn.textContent = label;
+        btn.addEventListener("click", function () { pressDigit(label); });
+      }
+      keypadEl.appendChild(btn);
+    });
+  }
+
+  // Atalhos de teclado quando a tela do Keypad estiver aberta
+  window.addEventListener('keydown', function (e) {
+    if (!keypadContainer || keypadContainer.hidden) return;
+    if (e.target && (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA')) return;
+    if (e.key >= '0' && e.key <= '9') {
+      pressDigit(e.key);
+    } else if (e.key === 'Backspace') {
+      pressBackspace();
+    } else if (e.key === 'Escape') {
+      returnToCredentials();
+    }
+  });
+
+  function returnToCredentials() {
+    if (keypadContainer) keypadContainer.hidden = true;
+    if (credentialsCard) credentialsCard.hidden = false;
+    currentTicket = null;
+    resetPin();
+    if (btnLoginSubmit) {
+      btnLoginSubmit.disabled = false;
+      btnLoginSubmit.textContent = 'Entrar';
+    }
+  }
+
+  if (pinBackBtn) {
+    pinBackBtn.addEventListener('click', returnToCredentials);
+  }
+
+  renderDots();
+  setStatus("Enter PIN", "neutral");
+
+  function showWelcome(m) {
+    if (document.getElementById('w-name')) document.getElementById('w-name').textContent = m.name;
+    if (document.getElementById('w-role')) document.getElementById('w-role').textContent = m.role;
+    if (credentialsCard) credentialsCard.hidden = true;
+    if (keypadContainer) keypadContainer.hidden = true;
+    if (welcomeContainer) welcomeContainer.hidden = false;
+    if (welcome) welcome.hidden = false;
+  }
+
+  /* Gera HWID fingerprint do dispositivo */
+  function generateHwid() {
+    var nav = window.navigator, sc = window.screen;
+    var parts = [nav.userAgent, nav.language, sc.colorDepth, sc.width + 'x' + sc.height, sc.availWidth + 'x' + sc.availHeight, new Date().getTimezoneOffset(), nav.hardwareConcurrency || 0, nav.platform || ''];
+    var raw = parts.join('|'), hash = 5381;
+    for (var i = 0; i < raw.length; i++) { hash = ((hash << 5) + hash) + raw.charCodeAt(i); hash = hash & hash; }
+    return 'hwid_' + Math.abs(hash).toString(16).padStart(8, '0') + '_' + (nav.hardwareConcurrency || 0) + 'c_' + sc.width + 'x' + sc.height;
+  }
+  var DEVICE_HWID = generateHwid();
+
+  // Etapa 1: Apertar no botão de entrar valida o usuário e exibe a tela do PIN Keypad
+  form.addEventListener('submit', function (e) {
+    e.preventDefault();
+    var h = document.getElementById('handle').value.trim();
+    var p = document.getElementById('pwd').value.trim();
+    if (!h) { msg.textContent = 'Informe seu nome de membro.'; return; }
+    if (!p) { msg.textContent = 'Informe sua senha de acesso.'; return; }
+
+    msg.textContent = 'Verificando credenciais...';
+    if (btnLoginSubmit) {
+      btnLoginSubmit.disabled = true;
+      btnLoginSubmit.textContent = 'Verificando...';
+    }
+
+    fetch('/api/auth/login/step1', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      credentials: 'include',
+      body: JSON.stringify({ username: h, password: p, hwid: DEVICE_HWID })
+    })
+    .then(function (r) {
+      return r.json().then(function (d) { return { ok: r.ok, status: r.status, d: d }; });
+    })
+    .then(function (res) {
+      if (btnLoginSubmit) {
+        btnLoginSubmit.disabled = false;
+        btnLoginSubmit.textContent = 'Entrar';
+      }
+      var d = res.d;
+      if (d && d.success && d.ticket) {
+        msg.textContent = '';
+        currentTicket = d.ticket;
+        currentUsername = h;
+        if (d.pinLength) {
+          PIN_LENGTH = d.pinLength;
+        }
+        if (d.member && d.member.name) {
+          pinSub.textContent = 'Membro: ' + d.member.name + ' · Digite seu PIN';
+        } else {
+          pinSub.textContent = 'Toque nos dígitos abaixo';
+        }
+
+        // Transição: esconde o form inicial e abre o PIN Keypad!
+        credentialsCard.hidden = true;
+        keypadContainer.hidden = false;
+        resetPin();
+        setKeysDisabled(false);
+        setStatus("Enter PIN", "neutral");
+        attempts = 0;
+      } else {
+        msg.textContent = (d && d.error) || 'Acesso restrito apenas para membros.';
+      }
+    })
+    .catch(function (err) {
+      if (btnLoginSubmit) {
+        btnLoginSubmit.disabled = false;
+        btnLoginSubmit.textContent = 'Entrar';
+      }
+      msg.textContent = 'Servidor indisponível ou erro de rede. Tente de novo.';
+      console.error('login step1 error', err);
+    });
+  });
+
+  document.getElementById('logout').addEventListener('click', function () {
+    fetch('/api/auth/logout', { method: 'POST' }).catch(function () {}).then(function () {
+      form.reset();
+      resetPin();
+      currentTicket = null;
+      if (welcomeContainer) welcomeContainer.hidden = true;
+      if (welcome) welcome.hidden = true;
+      if (keypadContainer) keypadContainer.hidden = true;
+      if (credentialsCard) credentialsCard.hidden = false;
+      msg.textContent = '';
+      document.getElementById('nav-dashboard').hidden = true;
+    });
+  });
+  /* já logado? mostra o painel de boas-vindas */
+  fetch('/api/auth/me').then(function (r) { return r.json(); }).then(function (d) {
+    if (d && d.success && d.member) {
+      showWelcome(d.member);
+      document.getElementById('nav-dashboard').hidden = false;
+    }
+  }).catch(function () {});
+
+  /* ---------- título animado ---------- */
+  var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (reduce) return;
+
+  var h1 = document.getElementById('title');
+  var parts = Array.prototype.slice.call(h1.querySelectorAll('[data-t]'));
+  var GL = '01#$%&@*<>/\\[]{}=+_';
+  function rnd() { return GL.charAt(Math.floor(Math.random() * GL.length)); }
+
+  function glitch() {
+    h1.classList.remove('glitching');
+    void h1.offsetWidth;
+    h1.classList.add('glitching');
+  }
+
+  function decode() {
+    var total = parts.reduce(function (n, p) { return n + p.getAttribute('data-t').length; }, 0);
+    var frame = 0;
+    var timer = setInterval(function () {
+      var pos = 0;
+      parts.forEach(function (p) {
+        var t = p.getAttribute('data-t'), out = '';
+        for (var i = 0; i < t.length; i++, pos++) {
+          out += (frame / 2 > pos) ? t.charAt(i) : rnd();
+        }
+        p.textContent = out;
+      });
+      frame++;
+      if (frame / 2 > total + 1) {
+        clearInterval(timer);
+        parts.forEach(function (p) { p.textContent = p.getAttribute('data-t'); });
+        setTimeout(glitch, 900);
+        setTimeout(glitch, 3600);
+        setTimeout(decode, 9000);
+      }
+    }, 55);
+  }
+  decode();
+
+  var lines = [
+    '> dinheiro primeiro',
+    '> sudo ganhar --dinheiro --sem-rodeio',
+    '> organizated_crime.run()',
+    '> acesso: somente hierarquia',
+    '> lucro.dividir(todos)'
+  ];
+  var el = document.getElementById('typeline');
+  var li = 0, ci = lines[0].length, del = true;
+  function tick() {
+    var s = lines[li];
+    if (!del) {
+      ci++;
+      el.textContent = s.slice(0, ci);
+      if (ci >= s.length) { del = true; return setTimeout(tick, 1900); }
+      return setTimeout(tick, 45 + Math.random() * 70);
+    }
+    ci--;
+    el.textContent = s.slice(0, Math.max(ci, 0));
+    if (ci <= 0) { del = false; ci = 0; li = (li + 1) % lines.length; return setTimeout(tick, 380); }
+    return setTimeout(tick, 22);
+  }
+  setTimeout(tick, 2600);
+})();
+</script>
+
+<script>
+(function () {
+  const $ = (id) => document.getElementById(id);
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  /* ---------- Storage seguro ---------- */
+  const store = {
+    get(k, d) { try { const v = localStorage.getItem(k); return v ? JSON.parse(v) : d; } catch (e) { return d; } },
+    set(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) {} }
+  };
+
+  var io = 'IntersectionObserver' in window ? new IntersectionObserver((es) => es.forEach(e => { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } }), { threshold: .08 }) : null;
+  document.querySelectorAll('#view-fun .fx-reveal').forEach(el => io ? io.observe(el) : el.classList.add('in'));
+
+  /* ---------- Toast / copiar ---------- */
+  let tt;
+  function toast(msg) { const t = $('toast'); t.textContent = `> ${msg}`; t.classList.add('show'); clearTimeout(tt); tt = setTimeout(() => t.classList.remove('show'), 2600); }
+  document.querySelectorAll('[data-copy]').forEach(b => b.addEventListener('click', async () => {
+    try { await navigator.clipboard.writeText(b.dataset.copy); toast(b.dataset.msg); }
+    catch (e) { toast('Não foi possível copiar. Copie manualmente.'); }
+  }));
+
+  /* =====================  RÁDIO  ===================== */
+  const stationsDef = [
+    { id: 'luxuria', name: 'Luxúria', title: 'Luxúria', sub: 'Matuê & Xamã · via Spotify', bpm: 0, embed: 'https://open.spotify.com/embed/track/5kuUOpHZlZjL8b7HXkxRsm?utm_source=generator&theme=0' },
+    { id: 'phonk', name: 'Phonk Noturno', sub: 'Graves pesados e hi-hats metálicos · 140 BPM', bpm: 140 },
+    { id: 'synth', name: 'Synthwave 84', sub: 'Arpejos neon e baixo pulsante · 118 BPM', bpm: 118 },
+    { id: 'dark',  name: 'Dark Ambient', sub: 'Drones graves e texturas lentas', bpm: 0 }
+  ];
+  let station = store.get('nzi_station', 'luxuria');
+  if (!stationsDef.some(s => s.id === station)) station = 'phonk';
+  let ac = null, master = null, analyser = null, playing = false, timer = null, step = 0, voices = [];
+
+  function renderStations() {
+    $('stations').innerHTML = stationsDef.map(s => `<button type="button" role="tab" class="fx-station ${s.id === station ? 'active' : ''}" data-id="${s.id}" aria-selected="${s.id === station}">${s.name}</button>`).join('');
+    const s = stationsDef.find(x => x.id === station);
+    $('trackName').textContent = s.title || s.name; $('trackSub').textContent = s.sub; $('stStation').textContent = s.name;
+    const emb = !!s.embed;
+    $('embedWrap').hidden = !emb; $('viz').style.display = emb ? 'none' : '';
+    document.querySelector('#radio .fx-player').style.display = emb ? 'none' : '';
+    $('nowLabel').textContent = emb ? '● Spotify' : (playing ? '● No ar' : '● Em espera');
+    const fr = $('spotify'); const want = emb ? s.embed : '';
+    if ((fr.getAttribute('src') || '') !== want) { if (want) fr.setAttribute('src', want); else fr.removeAttribute('src'); }
+    $('stRadio').textContent = emb ? 'Spotify' : (playing ? 'No ar' : 'Desligada');
+  }
+  $('stations').addEventListener('click', (e) => {
+    const b = e.target.closest('.fx-station'); if (!b) return;
+    const wasPlaying = playing; if (playing) stopAudio();
+    station = b.dataset.id; store.set('nzi_station', station); renderStations();
+    if (!stationsDef.find(x => x.id === station).embed && wasPlaying) startAudio();
+  });
+  renderStations();
+
+  const vol = $('vol');
+  function setVol() { vol.style.setProperty('--v', vol.value + '%'); if (master) master.gain.setTargetAtTime(vol.value / 100 * .5, ac.currentTime, .05); }
+  vol.addEventListener('input', setVol); setVol();
+
+  function ensureCtx() {
+    if (ac) return;
+    ac = new (window.AudioContext || window.webkitAudioContext)();
+    master = ac.createGain(); master.gain.value = vol.value / 100 * .5;
+    analyser = ac.createAnalyser(); analyser.fftSize = 128; analyser.smoothingTimeConstant = .8;
+    master.connect(analyser); analyser.connect(ac.destination);
+  }
+  function osc(type, freq, t, dur, gainVal, dest, detune = 0) {
+    const o = ac.createOscillator(), g = ac.createGain();
+    o.type = type; o.frequency.setValueAtTime(freq, t); o.detune.value = detune;
+    g.gain.setValueAtTime(0.0001, t); g.gain.exponentialRampToValueAtTime(gainVal, t + .01); g.gain.exponentialRampToValueAtTime(.0001, t + dur);
+    o.connect(g); g.connect(dest || master); o.start(t); o.stop(t + dur + .05); return o;
+  }
+  function kick(t) {
+    const o = ac.createOscillator(), g = ac.createGain();
+    o.frequency.setValueAtTime(150, t); o.frequency.exponentialRampToValueAtTime(42, t + .16);
+    g.gain.setValueAtTime(.9, t); g.gain.exponentialRampToValueAtTime(.001, t + .28);
+    o.connect(g); g.connect(master); o.start(t); o.stop(t + .3);
+  }
+  let noiseBuf = null;
+  function hat(t, v = .12) {
+    if (!noiseBuf) { noiseBuf = ac.createBuffer(1, ac.sampleRate * .1, ac.sampleRate); const d = noiseBuf.getChannelData(0); for (let i = 0; i < d.length; i++) d[i] = Math.random() * 2 - 1; }
+    const s = ac.createBufferSource(), f = ac.createBiquadFilter(), g = ac.createGain();
+    s.buffer = noiseBuf; f.type = 'highpass'; f.frequency.value = 7000;
+    g.gain.setValueAtTime(v, t); g.gain.exponentialRampToValueAtTime(.001, t + .06);
+    s.connect(f); f.connect(g); g.connect(master); s.start(t); s.stop(t + .08);
+  }
+  const bassPhonk = [55, 55, 65.4, 55, 49, 49, 58.3, 49];
+  const arp = [220, 277.2, 329.6, 440, 329.6, 277.2, 220, 164.8];
+  const bassSynth = [55, 55, 55, 55, 73.4, 73.4, 65.4, 65.4];
+
+  function tick(t) {
+    const i = step % 16;
+    if (station === 'phonk') {
+      if (i % 4 === 0 || i === 10) kick(t);
+      hat(t, i % 2 ? .08 : .14);
+      if (i % 2 === 0) osc('sawtooth', bassPhonk[(i / 2) % 8], t, .32, .16);
+      if (i === 4 || i === 12) osc('square', 880, t, .06, .05);
+    } else if (station === 'synth') {
+      if (i % 4 === 0) kick(t);
+      if (i % 4 === 2) hat(t, .1);
+      osc('square', arp[i % 8], t, .22, .05, null, i % 2 ? 6 : -6);
+      if (i % 2 === 0) osc('sawtooth', bassSynth[(i / 2) % 8], t, .4, .13);
+    }
+    step++;
+  }
+  function startAudio() {
+    ensureCtx(); ac.resume();
+    const s = stationsDef.find(x => x.id === station);
+    if (s.bpm) {
+      const stepDur = 60 / s.bpm / 4; let next = ac.currentTime + .08;
+      timer = setInterval(() => { while (next < ac.currentTime + .2) { tick(next); next += stepDur; } }, 50);
+    } else { // dark ambient
+      const lp = ac.createBiquadFilter(); lp.type = 'lowpass'; lp.frequency.value = 500; lp.connect(master);
+      const lfo = ac.createOscillator(), lg = ac.createGain(); lfo.frequency.value = .12; lg.gain.value = 260; lfo.connect(lg); lg.connect(lp.frequency); lfo.start();
+      [[55, 'sawtooth', 0], [55, 'sawtooth', 9], [82.4, 'sine', 0], [110, 'triangle', -7]].forEach(([f, ty, d]) => {
+        const o = ac.createOscillator(), g = ac.createGain(); o.type = ty; o.frequency.value = f; o.detune.value = d; g.gain.value = .12; o.connect(g); g.connect(lp); o.start(); voices.push(o);
+      });
+      voices.push(lfo);
+    }
+    playing = true; step = 0;
+    $('playBtn').textContent = '❚❚'; $('playBtn').setAttribute('aria-label', 'Pausar rádio');
+    $('nowLabel').textContent = '● No ar'; $('stRadio').textContent = 'No ar';
+    drawViz();
+  }
+  function stopAudio() {
+    clearInterval(timer); timer = null;
+    voices.forEach(o => { try { o.stop(); } catch (e) {} }); voices = [];
+    playing = false;
+    $('playBtn').textContent = '▶'; $('playBtn').setAttribute('aria-label', 'Ligar rádio');
+    $('nowLabel').textContent = '● Em espera'; $('stRadio').textContent = 'Desligada';
+  }
+  $('playBtn').addEventListener('click', () => {
+    try { playing ? stopAudio() : startAudio(); toast(playing ? 'Rádio NZI no ar.' : 'Rádio pausada.'); }
+    catch (e) { toast('O navegador bloqueou o áudio.'); }
+  });
+  window.addEventListener('hashchange', () => { if (playing && location.hash !== '#entretenimento') stopAudio(); });
+  document.addEventListener('visibilitychange', () => { if (document.hidden && playing) stopAudio(); });
+
+  /* Visualizador */
+  const vz = $('viz'), vctx = vz.getContext('2d');
+  function drawViz() {
+    const w = vz.width, h = vz.height;
+    vctx.clearRect(0, 0, w, h);
+    if (analyser && playing) {
+      const data = new Uint8Array(analyser.frequencyBinCount); analyser.getByteFrequencyData(data);
+      const bars = 40, bw = w / bars;
+      for (let i = 0; i < bars; i++) {
+        const v = data[Math.floor(i * data.length / bars)] / 255, bh = Math.max(4, v * h * .92);
+        const g = vctx.createLinearGradient(0, h, 0, h - bh); g.addColorStop(0, '#6e0d16'); g.addColorStop(1, '#ff2a3a');
+        vctx.fillStyle = g; vctx.shadowColor = '#ff2a3a'; vctx.shadowBlur = 10;
+        vctx.fillRect(i * bw + 3, h - bh, bw - 6, bh);
+      }
+      vctx.shadowBlur = 0; requestAnimationFrame(drawViz);
+    } else { idleViz(); }
+  }
+  function idleViz() {
+    const w = vz.width, h = vz.height; vctx.clearRect(0, 0, w, h);
+    vctx.fillStyle = 'rgba(255,42,58,.35)';
+    for (let i = 0; i < 40; i++) vctx.fillRect(i * (w / 40) + 3, h - 6, w / 40 - 6, 4);
+  }
+  idleViz();
+})();
+</script>
+
+
+<script>
+/* Estatísticas de acesso (LGPD): sem cookies, respeita DNT/GPC; o servidor trunca o IP e estima a localização. */
+(function () {
+  fetch('/api/track/policy').then(function (r) { return r.json(); }).then(function (d) {
+    if (d && d.retentionDays) document.getElementById('privacy-days').textContent = d.retentionDays;
+  }).catch(function () {});
+  if (navigator.doNotTrack === '1' || window.doNotTrack === '1' || navigator.globalPrivacyControl) return;
+  var seen = {};
+  function pageKey() {
+    var h = (location.hash || '').replace('#', '').toLowerCase();
+    return h === 'entretenimento' ? 'entretenimento' : h === 'recrutamento' ? 'recrutamento' : (h === 'login' || h === 'acesso') ? 'login' : 'inicio';
+  }
+  function send(type) {
+    var body = JSON.stringify({ page: pageKey(), type: type });
+    try { fetch('/api/track', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: body, keepalive: true }).catch(function () {}); } catch (e) {}
+  }
+  function view() { var k = pageKey(); if (seen[k]) return; seen[k] = true; send('view'); }
+  view();
+  window.addEventListener('hashchange', view);
+  setInterval(function () { if (document.visibilityState === 'visible') send('ping'); }, 45000);
+})();
+</script>
+
+<script src="/recruitment.js" defer></script>
+<script src="/blood-cursor.js" defer></script>
+
+</body></html>

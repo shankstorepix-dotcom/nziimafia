@@ -1,0 +1,26 @@
+# Ambiente e Segredos Confidenciais (NUNCA COMMITTAR)
+.env
+.env.*
+.env.local
+.env.production
+!.env.example
+
+# Banco de dados local e armazenamentos de runtime
+database.json
+data/
+*.log
+logs/
+
+# Dependências
+node_modules/
+
+# Vercel & Cache de Build
+.vercel/
+.cache/
+
+# Arquivos temporários e backups
+*.bak
+*.tmp
+*.swp
+.DS_Store
+Thumbs.db

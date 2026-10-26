@@ -1,0 +1,41 @@
+==================================================================
+NZI MAFIA — MANUAL DE IMPLANTAÇÃO E SEGURANÇA REFORÇADA
+==================================================================
+
+1. REQUISITOS DE SEGURANÇA E AMBIENTE:
+   - NUNCA suba o arquivo .env ou database.json com credenciais no GitHub!
+   - As credenciais antigas (senhas e PINs 777001..777009) foram 100% REVOGADAS.
+   - O token antigo do Bot Guard NZI no Discord foi REVOGADO no banco e agora
+     deve ser definido OBRIGATORIAMENTE via variável de ambiente (DISCORD_BOT_TOKEN).
+
+2. VARIÁVEIS DE AMBIENTE NA VERCEL:
+   Configure no painel da Vercel (Settings -> Environment Variables):
+   - JWT_SECRET                   = Chave forte de 32+ caracteres randômicos
+   - DISCORD_BOT_TOKEN            = Novo token do Bot Guard gerado no Discord Developer Portal
+   - DISCORD_WEBHOOK_URL          = URL segura do Webhook Discord
+   - ADMIN_SETUP_SECRET           = Chave mestra caso deseje recriar admin inicial
+   - SUPABASE_URL                 = URL do projeto Supabase (se utilizado)
+   - SUPABASE_SERVICE_ROLE_KEY    = Chave service_role secreta do Supabase
+   - TRUST_PROXY                  = 1 (essencial para integração com Cloudflare)
+
+3. INTEGRAÇÃO CLOUDFLARE + VERCEL:
+   a) Na Cloudflare:
+      - CNAME para cname.vercel-dns.com com proxy ativado (Nuvem Laranja)
+      - SSL/TLS: Modo "Full (strict)"
+      - Ative "Always Use HTTPS" e "Automatic HTTPS Rewrites"
+      - WAF: Ative "Bot Fight Mode" e "Browser Integrity Check"
+   b) Na Vercel:
+      - O express e o vercel.json já estão configurados com cabeçalhos HSTS,
+        CSP, proteção anti-sniffing e leitura do cabeçalho CF-Connecting-IP.
+
+4. AUTENTICAÇÃO SEGURA COM USUÁRIO, SENHA E 2FA/OTP:
+   O login agora exige autenticação multifatorial:
+   - Usuário: Codinome do integrante (ex: ph_labubu)
+   - Senha: Senha criptografada com salt bcrypt
+   - 2FA/OTP: Código TOTP de 6 dígitos gerado por aplicativo autenticador
+     (Google Authenticator, Authy) ou código PIN seguro de contingência.
+
+5. ARQUIVOS PROTEGIDOS NO SERVIDOR:
+   O servidor e o vercel.json bloqueiam estritamente o acesso direto a:
+   database.json, .env, schemas SQL, dados de auditoria e código backend.
+   Apenas assets legítimos de interface pública são servidos.
